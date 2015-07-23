@@ -14,4 +14,3 @@ class ImagerProfile(models.Model):
 
     def __str__(self):
         return "{}'s profile".format(self.user.username)
-
