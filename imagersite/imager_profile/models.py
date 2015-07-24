@@ -8,14 +8,19 @@ from django.contrib.auth.models import ActiveProfileManager, User
 class ImagerProfile(models.Model):
     user = models.OneToOneField(
         User,
+        related_name="profile",
         nullable=False
     )
     fav_camera = models.CharField(
-        max_length=30
+        max_length=30,
+        help_text="Enter your favorite camera."
     )
     address = models.CharField()
     web_url = models.URLField()
-    type_photography = models.CharField(max_length=30)
+    type_photography = models.CharField(
+        max_length=30,
+        help_text="What type of photgraphy do your prefer?"
+    )
 
     objects = models.Manager()
     active = ActiveProfileManager()
