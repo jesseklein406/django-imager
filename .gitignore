@@ -58,3 +58,6 @@ target/
 
 # Media Folder
 media/*
+
+# Database
+db.sqlite3
