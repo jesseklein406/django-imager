@@ -2,7 +2,7 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 
-from imager_profile import ImagerProfile
+from .models import ImagerProfile
 
 
 @receiver(post_save, sender=User)
@@ -32,7 +32,7 @@ def create_user_for_profile(sender, **kwargs):
 
 
 @receiver(post_delete, sender=User)
-def delete_profile_for_user(sender, kwargs):
+def delete_profile_for_user(sender, **kwargs):
     """Delete a related user when profile is deleted."""
     instance = kwargs.get('instance')
     if not instance:
@@ -44,7 +44,7 @@ def delete_profile_for_user(sender, kwargs):
 
 
 @receiver(post_delete, sender=ImagerProfile)
-def delete_user_for_profile(sender, kwargs):
+def delete_user_for_profile(sender, **kwargs):
     """Delete a related user when profile is deleted."""
     instance = kwargs.get('instance')
     if not instance:
