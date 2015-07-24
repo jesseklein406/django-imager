@@ -1,7 +1,14 @@
 import six
 
 from django.db import models
-from django.contrib.auth.models import ActiveProfileManager, User
+from django.contrib.auth.models import User
+
+
+class ActiveProfileManager(models.Manager):
+    def get_queryset(self):
+        return super(ActiveProfileManager, self).get_queryset.filter(
+            user__is_active=True
+        )
 
 
 @six.python_2_unicode_compatible
@@ -9,7 +16,7 @@ class ImagerProfile(models.Model):
     user = models.OneToOneField(
         User,
         related_name="profile",
-        nullable=False
+        null=False
     )
     fav_camera = models.CharField(
         max_length=30,
@@ -28,5 +35,6 @@ class ImagerProfile(models.Model):
     def __str__(self):
         return "{}'s profile".format(self.user.username)
 
+    @property
     def is_active(self):
         return self.user.is_active
