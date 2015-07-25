@@ -1,3 +1,4 @@
+from __future__ import unicode_literals
 import six
 
 from django.db import models
@@ -22,7 +23,7 @@ class Photo(models.Model):
     description = models.TextField()
     date_uploaded = models.DateField(auto_now_add=True)
     date_modified = models.DateField(auto_now=True)
-    date_published = models.DateField()
+    date_published = models.DateField(null=True)
     published = models.CharField(
         max_length=256,
         choices=PUBLISHED_CHOICES,
@@ -47,7 +48,7 @@ class Album(models.Model):
     description = models.TextField()
     date_uploaded = models.DateField(auto_now_add=True)
     date_modified = models.DateField(auto_now=True)
-    date_published = models.DateField()
+    date_published = models.DateField(null=True)
     published = models.CharField(
         max_length=256,
         choices=PUBLISHED_CHOICES,
