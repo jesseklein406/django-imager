@@ -33,7 +33,7 @@ def create_user_for_profile(sender, **kwargs):
 
 @receiver(post_delete, sender=User)
 def delete_profile_for_user(sender, **kwargs):
-    """Delete a related user when profile is deleted."""
+    """Delete a related profile when user is deleted."""
     instance = kwargs.get('instance')
     if not instance:
         return
@@ -45,7 +45,7 @@ def delete_profile_for_user(sender, **kwargs):
 
 @receiver(post_delete, sender=ImagerProfile)
 def delete_user_for_profile(sender, **kwargs):
-    """Delete a related user when profile is deleted."""
+    """Delete a related photos when user is deleted."""
     instance = kwargs.get('instance')
     if not instance:
         return

@@ -1,3 +1,4 @@
+from __future__ import unicode_literals
 import six
 
 from django.db import models
@@ -22,7 +23,7 @@ class Photo(models.Model):
     description = models.TextField()
     date_uploaded = models.DateField(auto_now_add=True)
     date_modified = models.DateField(auto_now=True)
-    date_published = models.DateField()
+    date_published = models.DateField(null=True)
     published = models.CharField(
         max_length=256,
         choices=PUBLISHED_CHOICES,
@@ -30,24 +31,25 @@ class Photo(models.Model):
     )
 
     def __str__(self):
-        return "Photo: {}".format(self.title)
+        return self.title
 
 
 @six.python_2_unicode_compatible
 class Album(models.Model):
     user = models.ForeignKey(
         User,
-        null=False
+        null=False,
+        related_name='albums'
     )
     photos = models.ManyToManyField(
         Photo,
-        related_name='album'
+        related_name='albums'
     )
     title = models.CharField(max_length=256)
     description = models.TextField()
     date_uploaded = models.DateField(auto_now_add=True)
     date_modified = models.DateField(auto_now=True)
-    date_published = models.DateField()
+    date_published = models.DateField(null=True)
     published = models.CharField(
         max_length=256,
         choices=PUBLISHED_CHOICES,
@@ -59,4 +61,4 @@ class Album(models.Model):
     )
 
     def __str__(self):
-        return "Album: {}".format(self.title)
+        return self.title
