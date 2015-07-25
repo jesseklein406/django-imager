@@ -18,13 +18,13 @@ class Photo(models.Model):
         null=False
     )
     photo = models.ImageField(upload_to='photo_files/%Y-%m-%d')
-    title = models.CharField(maxlength=256)
+    title = models.CharField(max_length=256)
     description = models.TextField()
     date_uploaded = models.DateField(auto_now_add=True)
     date_modified = models.DateField(auto_now=True)
     date_published = models.DateField()
     published = models.CharField(
-        maxlength=256,
+        max_length=256,
         choices=PUBLISHED_CHOICES,
         default='private'
     )
@@ -43,13 +43,13 @@ class Album(models.Model):
         Photo,
         related_name='album'
     )
-    title = models.CharField(maxlength=256)
+    title = models.CharField(max_length=256)
     description = models.TextField()
     date_uploaded = models.DateField(auto_now_add=True)
     date_modified = models.DateField(auto_now=True)
     date_published = models.DateField()
     published = models.CharField(
-        maxlength=256,
+        max_length=256,
         choices=PUBLISHED_CHOICES,
         default='private'
     )
