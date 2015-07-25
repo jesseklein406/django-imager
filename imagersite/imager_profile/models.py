@@ -33,7 +33,7 @@ class ImagerProfile(models.Model):
     active = ActiveProfileManager()
 
     def __str__(self):
-        return "{}'s profile".format(self.user.username)
+        return "Profile: {}".format(self.user.username)
 
     @property
     def is_active(self):
