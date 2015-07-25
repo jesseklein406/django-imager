@@ -19,7 +19,7 @@ class ImagerProfile(models.Model):
         related_name="profile",
         null=False
     )
-    fav_camera = models.CharField(
+    camera = models.CharField(
         max_length=256,
         help_text="Enter your favorite camera."
     )

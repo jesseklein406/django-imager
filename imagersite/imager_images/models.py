@@ -39,10 +39,11 @@ class Album(models.Model):
     user = models.ForeignKey(
         User,
         null=False
+        related_name='albums'
     )
     photos = models.ManyToManyField(
         Photo,
-        related_name='album'
+        related_name='albums'
     )
     title = models.CharField(max_length=256)
     description = models.TextField()

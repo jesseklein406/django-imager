@@ -2,7 +2,7 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 
-from .models import ImagerProfile
+from .models import Album, ImagerProfile, Photo
 
 
 @receiver(post_save, sender=User)
@@ -33,7 +33,7 @@ def create_user_for_profile(sender, **kwargs):
 
 @receiver(post_delete, sender=User)
 def delete_profile_for_user(sender, **kwargs):
-    """Delete a related user when profile is deleted."""
+    """Delete a related profile when user is deleted."""
     instance = kwargs.get('instance')
     if not instance:
         return
@@ -43,9 +43,33 @@ def delete_profile_for_user(sender, **kwargs):
         pass
 
 
+@receiver(post_delete, sender=User)
+def delete_albums_for_user(sender, **kwargs):
+    """Delete related albums when user is deleted."""
+    instance = kwargs.get('instance')
+    if not instance:
+        return
+    try:
+        instance.albums.all().delete()
+    except Album.DoesNotExist:
+        pass
+
+
+@receiver(post_delete, sender=User)
+def delete_photos_for_user(sender, **kwargs):
+    """Delete related photos when user is deleted."""
+    instance = kwargs.get('instance')
+    if not instance:
+        return
+    try:
+        instance.photos.all().delete()
+    except Photo.DoesNotExist:
+        pass
+
+
 @receiver(post_delete, sender=ImagerProfile)
 def delete_user_for_profile(sender, **kwargs):
-    """Delete a related user when profile is deleted."""
+    """Delete a related photos when user is deleted."""
     instance = kwargs.get('instance')
     if not instance:
         return
