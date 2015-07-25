@@ -38,7 +38,7 @@ class Photo(models.Model):
 class Album(models.Model):
     user = models.ForeignKey(
         User,
-        null=False
+        null=False,
         related_name='albums'
     )
     photos = models.ManyToManyField(
