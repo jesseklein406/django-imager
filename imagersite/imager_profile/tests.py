@@ -2,6 +2,8 @@
 # -*- coding: utf-8 -*-
 
 from django.test import TestCase
+from django.contrib.auth.models import User
+from imager_images.models import Photo, Album
 from .models import ImagerProfile
 import factory
 
@@ -9,26 +11,21 @@ import factory
 # Create your tests here.
 class UserTest(TestCase):
     def setUp(self):
-        user1 = ImagerProfile.add(
-            fav_camera='unknown',
-            address='5j34bekrj',
-            web_url='http://www.fakeaddress.com',
-            type_photography='badass'
-        )
+        user1 = User()
+        user1.username = 'badass'
+        user1.email = 'badass@badass.com'
+        user1.set_password('abc')
+
         user1.save()
 
-    def test_create_imager(self):
-        new = ImagerProfile.objects[0]
+    def test_create_user(self):
+        new = User.objects.all()[0]
         expected = [
-            'unknown',
-            '5j34bekrj',
-            'http://www.fakeaddress.com',
-            'badass'
+            'badass',
+            'badass@badass.com'
         ]
         actual = [
-            new['fav_camera'],
-            new['address'],
-            new['web_url'],
-            new['type_photography']
+            new.username,
+            new.email
         ]
         self.assertEqual(actual, expected)
