@@ -30,7 +30,7 @@ class Photo(models.Model):
     )
 
     def __str__(self):
-        return "Photo: {}".format(self.title)
+        return self.title
 
 
 @six.python_2_unicode_compatible
@@ -59,4 +59,4 @@ class Album(models.Model):
     )
 
     def __str__(self):
-        return "Album: {}".format(self.title)
+        return self.title
