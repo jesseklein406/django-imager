@@ -1,11 +1,8 @@
 from __future__ import unicode_literals
-import os
 
 from django.contrib.auth.models import User
 from django.db import models
 from django.utils.encoding import python_2_unicode_compatible
-
-from imager_profile.models import ImagerProfile
 
 
 PUBLISHED_CHOICES = (
