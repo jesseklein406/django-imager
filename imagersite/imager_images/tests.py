@@ -46,11 +46,11 @@ class PhotoTestCase(TestCase):
     """Test photos can be created and assigned to users."""
     @classmethod
     def setUp(cls):
-        user1 = UserFactory()
-        user1.set_password('secret')
-        user1.save()
+        cls.user1 = UserFactory()
+        cls.user1.set_password('secret')
+        cls.user1.save()
         for i in range(10):
-            PhotoFactory(user=user1)
+            PhotoFactory(user=cls.user1)
 
     def tearDown(cls):
         User.objects.all().delete()
@@ -59,10 +59,9 @@ class PhotoTestCase(TestCase):
         self.assertEqual(Photo.objects.count(), 10)
 
     def test_photos_belong_to_user(self):
-        user1 = User.objects.first()
-        pic1 = user1.photos.first()
-        self.assertEqual(user1.photos.count(), 10)
-        self.assertEqual(user1.username, pic1.user.username)
+        pic1 = self.user1.photos.first()
+        self.assertEqual(self.user1.photos.count(), 10)
+        self.assertEqual(self.user1.username, pic1.user.username)
 
     def test_photo_do_not_belong_to_other_users(self):
         other_user = UserFactory()
@@ -71,8 +70,7 @@ class PhotoTestCase(TestCase):
         self.assertEqual(other_user.photos.count(), 0)
 
     def test_photo_deletion_on_user_deletion(self):
-        user1 = User.objects.first()
-        user1.delete()
+        self.user1.delete()
         self.assertEqual(Photo.objects.count(), 0)
 
 
