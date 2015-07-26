@@ -4,6 +4,8 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.utils.encoding import python_2_unicode_compatible
 
+from imager_profile.models import ImagerProfile
+
 
 PUBLISHED_CHOICES = (
     ('private', 'private'),
@@ -16,7 +18,8 @@ PUBLISHED_CHOICES = (
 class Photo(models.Model):
     user = models.ForeignKey(
         User,
-        null=False
+        null=False,
+        related_name='photos'
     )
     photo = models.ImageField(upload_to='photo_files/%Y-%m-%d')
     title = models.CharField(max_length=256)
@@ -57,7 +60,9 @@ class Album(models.Model):
     )
     cover = models.ForeignKey(
         Photo,
-        related_name='cover_photo'
+        related_name='cover_photo',
+        null=True,
+        blank=True
     )
 
     def __str__(self):
