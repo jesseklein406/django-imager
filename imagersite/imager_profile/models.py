@@ -1,8 +1,8 @@
 from __future__ import unicode_literals
-import six
 
-from django.db import models
 from django.contrib.auth.models import User
+from django.db import models
+from django.utils.encoding import python_2_unicode_compatible
 
 
 class ActiveProfileManager(models.Manager):
@@ -12,7 +12,7 @@ class ActiveProfileManager(models.Manager):
         )
 
 
-@six.python_2_unicode_compatible
+@python_2_unicode_compatible
 class ImagerProfile(models.Model):
     user = models.OneToOneField(
         User,
