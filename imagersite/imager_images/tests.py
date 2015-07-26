@@ -75,6 +75,7 @@ class PhotoTestCase(TestCase):
         self.assertEqual(other_user.photos.count(), 0)
 
     def test_photo_deletion_on_user_deletion(self):
+        self.assertGreater(Photo.objects.count(), 0)
         self.user1.delete()
         self.assertEqual(Photo.objects.count(), 0)
 
@@ -124,6 +125,7 @@ class AlbumTestCase(TestCase):
         self.assertIsInstance(self.album1.cover, Photo)
 
     def test_album_deletion_on_user_deletion(self):
+        self.assertGreater(Album.objects.count(), 0)
         self.user1.delete()
         self.assertEqual(Album.objects.count(), 0)
 
