@@ -4,7 +4,6 @@ from django.test import TestCase
 import factory
 from faker import Faker
 
-from imager_profile.models import ImagerProfile
 from .models import Album, Photo
 
 # Create your tests here.
@@ -30,6 +29,7 @@ class PhotoFactory(factory.django.DjangoModelFactory):
     photo = factory.django.ImageField()
     title = fake.sentence()
     description = fake.text()
+    user = factory.SubFactory(UserFactory)
 
 
 class AlbumFactory(factory.django.DjangoModelFactory):
@@ -39,4 +39,14 @@ class AlbumFactory(factory.django.DjangoModelFactory):
 
     title = fake.sentence()
     description = fake.text()
+    user = factory.SubFactory(UserFactory)
 
+
+class PhotoTestCase(TestCase):
+    """docstring for PhotoTestCase"""
+    @classmethod
+    def setUp(cls):
+        user = UserFactory()
+        user.set_password('secret')
+        user.save()
+        
