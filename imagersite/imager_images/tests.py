@@ -1,5 +1,4 @@
 from __future__ import unicode_literals
-import os
 from shutil import rmtree
 
 from django.contrib.auth.models import User
@@ -29,7 +28,6 @@ class PhotoFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Photo
 
-    os.environ['TESTING'] = "True"
     photo = factory.django.ImageField(upload_to='test_photos/%Y-%m-%d')
     title = fake.sentence()
     description = fake.text()
