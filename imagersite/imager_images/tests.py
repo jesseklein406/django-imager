@@ -11,7 +11,7 @@ from .models import Album, Photo
 fake = Faker()
 
 
-class UserFactory(factory.Factory):
+class UserFactory(factory.django.DjangoModelFactory):
     """Create a fake user."""
     class Meta:
         model = User
@@ -31,4 +31,12 @@ class PhotoFactory(factory.django.DjangoModelFactory):
     title = fake.sentence()
     description = fake.text()
 
+
+class AlbumFactory(factory.django.DjangoModelFactory):
+    """Create a fake album."""
+    class Meta:
+        model = Album
+
+    title = fake.sentence()
+    description = fake.text()
 
