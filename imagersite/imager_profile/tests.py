@@ -20,99 +20,89 @@ class UserFactory(factory.Factory):
 # Create your tests here.
 class UserTest(TestCase):
     def setUp(self):
-        user1 = UserFactory()
-        user1.set_password('abc')
-        user1.save()
+        self.user1 = UserFactory()
+        self.user1.set_password('abc')
+        self.user1.save()
+        self.profile1 = self.user1.profile
 
     # Test 1
     # Check that User works as we expect as base class
     def test_create_user(self):
-        new = User.objects.all()[0]
         expected = [
             'badass',
             'badass@example.com'
         ]
         actual = [
-            new.username,
-            new.email
+            self.user1.username,
+            self.user1.email
         ]
         self.assertEqual(actual, expected)
-        self.assertIsInstance(new.profile, ImagerProfile)
+        self.assertIsInstance(self.user1.profile, ImagerProfile)
 
     # Test 2
     # Check that an imagerProfile is created when user is created
     def test_create_imagerprofile(self):
-        new = ImagerProfile.objects.all()[0]
-        self.assertEqual(new.user.username, 'badass')
+        self.assertEqual(self.profile1.user.username, 'badass')
 
     # Test 3
     # Check that camera field can optionally hold data
     def test_camera_field(self):
-        new = ImagerProfile.objects.all()[0]
-        self.assertFalse(new.camera)
-        new.camera = 'potato'
-        self.assertEqual(new.camera, 'potato')
+        self.assertFalse(self.profile1.camera)
+        self.profile1.camera = 'potato'
+        self.assertEqual(self.profile1.camera, 'potato')
 
     # Test 4
     # Check that address field can optionally hold data
     def test_address_field(self):
-        new = ImagerProfile.objects.all()[0]
-        self.assertFalse(new.address)
-        new.address = '123 Fake St'
-        self.assertEqual(new.address, '123 Fake St')
+        self.assertFalse(self.profile1.address)
+        self.profile1.address = '123 Fake St'
+        self.assertEqual(self.profile1.address, '123 Fake St')
 
     # Test 5
     # Check that web_url field can optionally hold data
     def test_web_url_field(self):
-        new = ImagerProfile.objects.all()[0]
-        self.assertFalse(new.web_url)
-        new.web_url = 'example.com'
-        self.assertEqual(new.web_url, 'example.com')
+        self.assertFalse(self.profile1.web_url)
+        self.profile1.web_url = 'example.com'
+        self.assertEqual(self.profile1.web_url, 'example.com')
 
     # Test 6
     # Check that type_photography field can optionally hold data
     def test_type_photography_field(self):
-        new = ImagerProfile.objects.all()[0]
-        self.assertFalse(new.type_photography)
-        new.web_url = 'astrophotography'
-        self.assertEqual(new.web_url, 'astrophotography')
+        self.assertFalse(self.profile1.type_photography)
+        self.profile1.web_url = 'astrophotography'
+        self.assertEqual(self.profile1.web_url, 'astrophotography')
 
     # Test 7
     # Check that is_active property works as expected
     def test_is_active(self):
-        new = ImagerProfile.objects.all()[0]
-        self.assertIs(new.user.is_active, True)
-        self.assertIs(new.is_active, True)
+        self.assertIs(self.profile1.user.is_active, True)
+        self.assertIs(self.profile1.is_active, True)
 
     # Test 8
     # Check that is_active can be changed
     def test_is_not_active(self):
-        new = ImagerProfile.objects.all()[0]
-        self.assertIs(new.is_active, True)
-        new.user.is_active = False
-        self.assertIs(new.is_active, False)
+        self.assertIs(self.profile1.is_active, True)
+        self.profile1.user.is_active = False
+        self.assertIs(self.profile1.is_active, False)
 
     # Test 9
     # Check that ActiveProfileManager works
     def test_active(self):
-        new = ImagerProfile.objects.all()[0]
         self.assertIs(len(ImagerProfile.active.all()), 1)
-        new.user.is_active = False
-        new.user.save()
+        self.profile1.user.is_active = False
+        self.profile1.user.save()
         self.assertFalse(ImagerProfile.active.all())
 
     # Test 10
     # Check that if user is killed, imagerProfile is killed
     def test_no_imagerprofile(self):
-        new = User.objects.all()[0]
         self.assertIs(len(ImagerProfile.objects.all()), 1)
-        new.delete()
+        self.user1.delete()
         self.assertFalse(ImagerProfile.objects.all())
 
     # Test 11
     # Check that if imagerProfile is killed, user is killed
     def test_no_user(self):
-        new = ImagerProfile.objects.all()[0]
         self.assertIs(len(User.objects.all()), 1)
-        new.delete()
+        self.profile1.delete()
         self.assertFalse(User.objects.all())
