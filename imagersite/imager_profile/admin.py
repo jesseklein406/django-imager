@@ -1,3 +1,12 @@
 from django.contrib import admin
+from .models import ImagerProfile
 
-# Register your models here.
+
+class CategoryUser(admin.ModelAdmin):
+    list_display = ['email', 'user_id']
+
+    class Meta:
+        model = ImagerProfile
+
+admin.site.register(ImagerProfile)
+        
