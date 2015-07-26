@@ -1,12 +1,15 @@
 from __future__ import unicode_literals
+import os
+from shutil import rmtree
+
 from django.contrib.auth.models import User
+from django.conf import settings
 from django.test import TestCase
 import factory
 from faker import Faker
 
 from .models import Album, Photo
 
-# Create your tests here.
 fake = Faker()
 
 
@@ -26,7 +29,8 @@ class PhotoFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Photo
 
-    photo = factory.django.ImageField()
+    os.environ['TESTING'] = "True"
+    photo = factory.django.ImageField(upload_to='test_photos/%Y-%m-%d')
     title = fake.sentence()
     description = fake.text()
     user = factory.SubFactory(UserFactory)
@@ -54,6 +58,7 @@ class PhotoTestCase(TestCase):
 
     def tearDown(cls):
         User.objects.all().delete()
+        rmtree(settings.MEDIA_ROOT)
 
     def test_photo_creation(self):
         self.assertEqual(Photo.objects.count(), 10)
@@ -91,6 +96,7 @@ class AlbumTestCase(TestCase):
 
     def tearDown(cls):
         User.objects.all().delete()
+        rmtree(settings.MEDIA_ROOT)
 
     def test_album_creation(self):
         self.assertEqual(Album.objects.count(), 2)
