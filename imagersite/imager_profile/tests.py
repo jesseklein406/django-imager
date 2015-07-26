@@ -106,3 +106,8 @@ class UserTest(TestCase):
         self.assertIs(len(User.objects.all()), 1)
         self.profile1.delete()
         self.assertFalse(User.objects.all())
+
+    # Test 12
+    # Check string representation of profile
+    def test_string_profile(self):
+        self.assertEqual(str(self.profile1), 'badass')
