@@ -5,7 +5,7 @@ import factory
 from faker import Faker
 
 from imager_profile.models import ImagerProfile
-from .models import Album, Pho
+from .models import Album, Photo
 
 # Create your tests here.
 fake = Faker()
@@ -22,5 +22,13 @@ class UserFactory(factory.Factory):
     email = fake.email()
 
 
+class PhotoFactory(factory.django.DjangoModelFactory):
+    """Create a fake photo."""
+    class Meta:
+        model = Photo
 
-    
+    photo = factory.django.ImageField()
+    title = fake.sentence()
+    description = fake.text()
+
+
