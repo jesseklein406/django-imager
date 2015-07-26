@@ -28,7 +28,7 @@ class PhotoFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Photo
 
-    photo = factory.django.ImageField(upload_to='test_photos/%Y-%m-%d')
+    photo = factory.django.ImageField()
     title = fake.sentence()
     description = fake.text()
     user = factory.SubFactory(UserFactory)
