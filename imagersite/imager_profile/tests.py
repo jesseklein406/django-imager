@@ -98,13 +98,15 @@ class UserTest(TestCase):
     # Test 9
     # Check that if user is killed, imagerProfile is killed
     def test_no_imagerprofile(self):
-        new = ImagerProfile.objects.all()[0]
-        new.user.delete()
+        new = User.objects.all()[0]
+        self.assertIs(len(ImagerProfile.objects.all()), 1)
+        new.delete()
         self.assertEqual(ImagerProfile.objects.all(), [])
 
     # Test 10
     # Check that if imagerProfile is killed, user is killed
     def test_no_user(self):
         new = ImagerProfile.objects.all()[0]
+        self.assertIs(len(User.objects.all()), 1)
         new.delete()
         self.assertEqual(User.objects.all(), [])

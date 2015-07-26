@@ -24,10 +24,12 @@ def delete_profile_for_user(sender, **kwargs):
     instance = kwargs.get('instance')
     if not instance:
         return
+    post_delete.disconnect(delete_user_for_profile, sender=ImagerProfile)
     try:
         instance.profile.delete()
     except ImagerProfile.DoesNotExist:
         pass
+    post_delete.connect(delete_user_for_profile, sender=ImagerProfile)
 
 
 @receiver(post_delete, sender=ImagerProfile)
@@ -36,7 +38,9 @@ def delete_user_for_profile(sender, **kwargs):
     instance = kwargs.get('instance')
     if not instance:
         return
+    post_delete.disconnect(delete_profile_for_user, sender=User)
     try:
         instance.user.delete()
-    except User.UserDoesNotExist:
+    except User.DoesNotExist:
         pass
+    post_delete.connect(delete_profile_for_user, sender=User)
