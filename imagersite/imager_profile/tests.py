@@ -7,16 +7,21 @@ from .models import ImagerProfile
 import factory
 
 
+class UserFactory(factory.Factory):
+    class Meta:
+        model = User
+
+    username = 'badass'
+    email = factory.LazyAttribute(
+        lambda a: '{}@example.com'.format(a.username).lower()
+    )
+
+
 # Create your tests here.
 class UserTest(TestCase):
     def setUp(self):
-        user1 = User()
-        user1.username = 'badass'
-        user1.email = factory.LazyAttribute(
-            lambda a: '{}@example.com'.format(a.username).lower()
-        )
+        user1 = UserFactory()
         user1.set_password('abc')
-
         user1.save()
 
     # Test 1
@@ -44,7 +49,7 @@ class UserTest(TestCase):
     # Check that camera field can optionally hold data
     def test_camera_field(self):
         new = ImagerProfile.objects.all()[0]
-        self.assertIs(new.camera, None)
+        self.assertFalse(new.camera)
         new.camera = 'potato'
         self.assertEqual(new.camera, 'potato')
 
@@ -52,23 +57,23 @@ class UserTest(TestCase):
     # Check that address field can optionally hold data
     def test_address_field(self):
         new = ImagerProfile.objects.all()[0]
-        self.assertIs(new.address, None)
+        self.assertFalse(new.address)
         new.address = '123 Fake St'
         self.assertEqual(new.address, '123 Fake St')
 
     # Test 5
     # Check that web_url field can optionally hold data
-    def test_web_url(self):
+    def test_web_url_field(self):
         new = ImagerProfile.objects.all()[0]
-        self.assertIs(new.web_url, None)
+        self.assertFalse(new.web_url)
         new.web_url = 'example.com'
         self.assertEqual(new.web_url, 'example.com')
 
     # Test 6
     # Check that type_photography field can optionally hold data
-    def test_type_photography(self):
+    def test_type_photography_field(self):
         new = ImagerProfile.objects.all()[0]
-        self.assertIs(new.type_photography, None)
+        self.assertFalse(new.type_photography)
         new.web_url = 'astrophotography'
         self.assertEqual(new.web_url, 'astrophotography')
 
@@ -87,26 +92,27 @@ class UserTest(TestCase):
         new.user.is_active = False
         self.assertIs(new.is_active, False)
 
-    # Test 8
+    # Test 9
     # Check that ActiveProfileManager works
     def test_active(self):
         new = ImagerProfile.objects.all()[0]
-        self.assertIs(len(ImagerProfile.active.get_queryset()), 1)
+        self.assertIs(len(ImagerProfile.active.all()), 1)
         new.user.is_active = False
-        self.assertEqual(ImagerProfile.active.get_queryset(), [])
+        new.user.save()
+        self.assertFalse(ImagerProfile.active.all())
 
-    # Test 9
+    # Test 10
     # Check that if user is killed, imagerProfile is killed
     def test_no_imagerprofile(self):
         new = User.objects.all()[0]
         self.assertIs(len(ImagerProfile.objects.all()), 1)
         new.delete()
-        self.assertEqual(ImagerProfile.objects.all(), [])
+        self.assertFalse(ImagerProfile.objects.all())
 
-    # Test 10
+    # Test 11
     # Check that if imagerProfile is killed, user is killed
     def test_no_user(self):
         new = ImagerProfile.objects.all()[0]
         self.assertIs(len(User.objects.all()), 1)
         new.delete()
-        self.assertEqual(User.objects.all(), [])
+        self.assertFalse(User.objects.all())
