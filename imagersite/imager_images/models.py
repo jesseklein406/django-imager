@@ -1,8 +1,8 @@
 from __future__ import unicode_literals
-import six
 
-from django.db import models
 from django.contrib.auth.models import User
+from django.db import models
+from django.utils.encoding import python_2_unicode_compatible
 
 
 PUBLISHED_CHOICES = (
@@ -12,7 +12,7 @@ PUBLISHED_CHOICES = (
 )
 
 
-@six.python_2_unicode_compatible
+@python_2_unicode_compatible
 class Photo(models.Model):
     user = models.ForeignKey(
         User,
@@ -34,7 +34,7 @@ class Photo(models.Model):
         return self.title
 
 
-@six.python_2_unicode_compatible
+@python_2_unicode_compatible
 class Album(models.Model):
     user = models.ForeignKey(
         User,
