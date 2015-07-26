@@ -66,10 +66,11 @@ class PhotoTestCase(TestCase):
         self.assertEqual(self.user1.photos.count(), 10)
         self.assertEqual(self.user1.username, pic1.user.username)
 
-    def test_photo_do_not_belong_to_other_users(self):
+    def test_photos_do_not_belong_to_other_users(self):
         other_user = UserFactory()
         other_user.set_password('moresecret')
         other_user.save()
+        self.assertEqual(Photo.objects.count(), 10)
         self.assertEqual(other_user.photos.count(), 0)
 
     def test_photo_deletion_on_user_deletion(self):
