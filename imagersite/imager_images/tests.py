@@ -58,7 +58,7 @@ class PhotoTestCase(TestCase):
 
     def tearDown(cls):
         User.objects.all().delete()
-        rmtree(settings.MEDIA_ROOT)
+        rmtree(settings.MEDIA_TEST)
 
     def test_photo_creation(self):
         self.assertEqual(Photo.objects.count(), 10)
@@ -96,7 +96,7 @@ class AlbumTestCase(TestCase):
 
     def tearDown(cls):
         User.objects.all().delete()
-        rmtree(settings.MEDIA_ROOT)
+        rmtree(settings.MEDIA_TEST)
 
     def test_album_creation(self):
         self.assertEqual(Album.objects.count(), 2)
