@@ -60,7 +60,7 @@ class Album(models.Model):
     )
     cover = models.ForeignKey(
         Photo,
-        related_name='cover_photo',
+        related_name='+',
         null=True,
         blank=True
     )
