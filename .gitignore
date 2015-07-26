@@ -56,8 +56,9 @@ docs/_build/
 # PyBuilder
 target/
 
-# Media Folder
+# Media Folders
 media/
+media_test/
 
 # Database
 db.sqlite3
