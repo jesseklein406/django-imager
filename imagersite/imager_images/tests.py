@@ -43,7 +43,7 @@ class AlbumFactory(factory.django.DjangoModelFactory):
 
 
 class PhotoTestCase(TestCase):
-    """docstring for PhotoTestCase"""
+    """Test photos can be created and assigned to users."""
     @classmethod
     def setUp(cls):
         user1 = UserFactory()
@@ -51,6 +51,9 @@ class PhotoTestCase(TestCase):
         user1.save()
         for i in range(100):
             PhotoFactory(user=user1)
+
+    def tearDown(cls):
+        User.objects.all().delete()
 
     def test_photo_creation(self):
         self.assertTrue(Photo.objects.count() == 100)
@@ -66,3 +69,11 @@ class PhotoTestCase(TestCase):
         other_user.set_password('moresecret')
         other_user.save()
         self.assertEqual(other_user.photos.count(), 0)
+
+
+class AlbumTestCase(TestCase):
+    """Test albums can be created and assigned to users and albums."""
+    @classmethod
+    def setUp(cls):
+        pass
+        
