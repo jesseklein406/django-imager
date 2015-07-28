@@ -51,7 +51,30 @@ nav li a {
     padding: 1.5rem;
 }
 
+#navbar-toggle {
+  position: relative;
+  display: inline-block;
+  padding: 1rem;
+  border: none;
+  cursor: pointer; }
+  #navbar-toggle:hover {
+    background-color: #282828; }
+  #navbar-toggle .icon-bar {
+    display: block;
+    width: 22px;
+    height: 2px;
+    border-radius: 1px;
+    background-color: #787878; }
+  #navbar-toggle .icon-bar + .icon-bar {
+    margin-top: 4px; }
+
 @media (min-width: 750px) {
   .collapse {
     display: inline-block !important;
-    visibility: visible !important; } }
+    visibility: visible !important;
+  }
+  
+  #navbar-toggle {
+    display: none;
+  }
+}
