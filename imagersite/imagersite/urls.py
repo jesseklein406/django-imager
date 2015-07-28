@@ -23,7 +23,7 @@ from . import views
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     url(r'^accounts/', include('registration.backends.default.urls')),
-    url(r'^/$', views.home, name='home')
+    url(r'^$', views.index, name='home')
 ]
 
 if settings.DEBUG:
