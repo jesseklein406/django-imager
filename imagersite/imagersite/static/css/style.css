@@ -22,6 +22,10 @@ a {
 }
 
 
+main {
+    margin-top: 20%;
+}
+
 header .columns {
     height: 80px;
 }
