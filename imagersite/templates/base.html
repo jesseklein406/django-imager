@@ -1,0 +1,32 @@
+{# Load the tag library #}
+{% load bootstrap3 %}
+
+{# Load CSS and JavaScript #}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
+{# Display django.contrib.messages as Bootstrap alerts #}
+{% bootstrap_messages %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Simple Image Sharing</title>
+  </head>
+  <body>
+    <header>
+      <h1>Image Sharing</h1>
+      <nav>
+        <ul>
+          <li>Nav Item</li>
+          <li>Nav Item</li>
+          <li>Nav Item</li>
+        </ul>
+      </nav>
+    </header>
+    <div id="sidebar"></div>
+    <main>
+      {% block content %}
+      {% endblock %}
+    </main>
+  </body>
+</html>
