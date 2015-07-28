@@ -29,24 +29,16 @@ class PhotoFactory(factory.django.DjangoModelFactory):
 
 class HomepageTest(TestCase):
     def setUp(self):
-        self.home_photo = PhotoFactory(
-            user=UserFactory(username='bob', email='bob@example.com'),
-            title='Neat title',
-            photo='bob.jpg',
-            description='Neat photo',
-            published='public'
-        )
         self.response = Client().get('/')
 
     def test_home_template(self):
         self.assertTemplateUsed(self.response, 'index.html')
 
     def test_home_photo(self):
-        self.assertEqual(
-            self.response.context['photo'].photo,
-            self.home_photo.photo
+        self.assertInHTML(
+            '<img src="static/images/django_1024x768.png">',
+            self.response.content
         )
-        self.assertInHTML('<div id="main-photo">', self.response.content)
 
     def test_login_link(self):
         self.assertInHTML('<a href="localhost/login/">', self.response.content)
@@ -63,23 +55,43 @@ class LoginTest(TestCase):
         self.user1 = UserFactory(
             username='john',
             email='john@example.com',
+            first_name='John',
+            last_name='Stephenson'
         )
         self.user1.set_password('abc')
         self.user1.save()
+
+        self.home_photo = PhotoFactory(
+            user=self.user1,
+            title='Neat title',
+            photo='john.jpg',
+            description='Neat photo',
+            published='public'
+        )
+        self.home_photo.save()
+
         self.client = Client()
-        # self.profile1 = self.user1.profile
 
     def test_login_success(self):
         params = {'username': self.user1.username, 'password': 'abc'}
         response = self.client.post('/login/', params)
         self.assertRedirects(response, '/', target_status_code=200)
-        self.assertInHTML(self.user1.username, response)
+        self.assertInHTML(self.user1.first_name, response.content)
 
     def test_logout_success(self):
         self.client.login(username=self.user1.username, password='abc')
         response = self.client.get('/logout/')
         self.assertRedirects(response, '/', target_status_code=200)
-        self.assertNotIn(self.user1.username, response)
+        self.assertNotIn(self.user1.username, response.content)
+
+    def test_first_image_in_home(self):
+        self.client.login(username=self.user1.username, password='abc')
+        response = self.client.get('/')
+        self.assertEqual(
+            response.context['photo'].photo,
+            self.home_photo.photo
+        )
+        self.assertInHTML('<img src="john.jpg">', response.content)
 
 
 class RegTest(TestCase):
