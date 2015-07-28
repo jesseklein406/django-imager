@@ -16,14 +16,13 @@ Including another URLconf
 from django.conf.urls import patterns, include, url
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.contrib.auth import views as auth_views
 from django.conf import settings
 
 from . import views
 
-urlpatterns = patterns('',
+urlpatterns = patterns(
+    '',
     url(r'^$', views.index, name='home'),
-    url(r'^accounts/logout/$', auth_views.logout, {'next_page': '/'}),
     url(r'^accounts/', include('registration.backends.default.urls')),
     url(r'^admin/', include(admin.site.urls)),
 )
