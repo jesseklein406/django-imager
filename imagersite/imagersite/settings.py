@@ -40,7 +40,6 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
-    'bootstrap3',
     'registration',
     'imager_profile',
     'imager_images',
@@ -115,6 +114,9 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, "imagersite/static"),
+)
 
 # Media file handling
 MEDIA_URL = '/media/'
