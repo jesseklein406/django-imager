@@ -1,0 +1,56 @@
+.block {
+    text-align: center;
+    white-space: nowrap;
+}
+
+.block:before {
+    content: '';
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+    margin-right: -0.25em;
+}
+
+.centered {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+
+a {
+    text-decoration: none;
+}
+
+
+header .columns {
+    height: 80px;
+}
+
+.logo {
+  margin: 0;
+  padding: 15px;
+  font-size: 3rem;
+}
+
+.collapse {
+  display: none;
+  visibility: none; }
+
+nav li {
+    display: block;
+    list-style: none;
+    float: left;
+}
+
+nav li a {
+    line-height: 2rem;
+    padding: 1.5rem;
+}
+
+@media (min-width: 400px) {
+  #navbar-collapse.collapse {
+    display: block !important;
+    height: auto !important;
+    padding-bottom: 0;
+    overflow: visible !important;
+    visibility: visible !important; } }
