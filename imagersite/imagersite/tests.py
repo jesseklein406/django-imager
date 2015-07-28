@@ -4,7 +4,7 @@
 from __future__ import unicode_literals
 from django.test import TestCase, Client
 from django.contrib.auth.models import User
-from imager_images import Photo
+from imager_images.models import Photo
 # from imager_profile.models import ImagerProfile
 import factory
 
@@ -29,7 +29,13 @@ class PhotoFactory(factory.django.DjangoModelFactory):
 
 class HomepageTest(TestCase):
     def setUp(self):
-        self.home_photo = PhotoFactory()
+        self.home_photo = PhotoFactory(
+            user=UserFactory(username='bob', email='bob@example.com'),
+            title='Neat title',
+            photo='bob.jpg',
+            description='Neat photo',
+            published='public'
+        )
         self.response = Client().get('/')
 
     def test_home_template(self):
@@ -54,7 +60,10 @@ class HomepageTest(TestCase):
 
 class LoginTest(TestCase):
     def setUp(self):
-        self.user1 = UserFactory()
+        self.user1 = UserFactory(
+            username='john',
+            email='john@example.com',
+        )
         self.user1.set_password('abc')
         self.user1.save()
         self.client = Client()
@@ -82,7 +91,8 @@ class RegTest(TestCase):
             'username': 'joseph',
             'email': 'joe@example.com',
             'password1': '123',
-            'password2': '123'}
+            'password2': '123'
+        }
         response = self.client.post('/accounts/register/', params)
         self.assertRedirects(
             response,
