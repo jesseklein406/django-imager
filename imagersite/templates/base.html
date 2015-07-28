@@ -6,9 +6,9 @@
   <!-- Basic Page Needs
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <meta charset="utf-8">
-  <title>Your page title here :)</title>
-  <meta name="description" content="">
-  <meta name="author" content="">
+  <title>Django Imager</title>
+  <meta name="description" content="A simple photo sharing app built on Django.">
+  <meta name="author" content="Jesse Klein and Jonathan Stallings">
 
   <!-- Mobile Specific Metas
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
@@ -22,6 +22,7 @@
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <link rel="stylesheet" href={% static "css/normalize.css" %}>
   <link rel="stylesheet" href={% static "css/skeleton.css" %}>
+  <link rel="stylesheet" href={% static "css/style.css" %}>
 
   <!-- Favicon
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
@@ -30,15 +31,43 @@
 </head>
 <body>
 
+
   <!-- Primary Page Layout
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <div class="container">
-    <div class="row">
-      <div class="one-half column" style="margin-top: 25%">
+  
+  <!-- Header
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <header>
+      <div class="row">
+        <div class="four columns block">
+          <a href="/" class="logo">Django-Imager</a>
+        </div>
+        <div class="three columns block offset-by-one">
+          <nav id="navbar-collapse" class="centered">
+            <ul>
+              <li><a href="/">About</a></li>
+              <li><a href="/" target="_blank">Source</a></li>
+            </ul>
+          </nav>
+        </div>
+        <div class="four columns block">
+          <sections id="header-actions" class="centered">
+          {% if user.is_authenticated %}
+            <button id="sign-out">Sign out</button>
+          {% else %}
+            <button id="sign-up" class="button-primary">Sign up</button>
+            <button id="sign-in">Sign in</button>
+          {% endif %}
+          </sections>
+        </div>
+      </div>
+    </header>
+    <main>
       {% block content %}
       {% endblock %}
-      </div>
-    </div>
+    </main>
+  
   </div>
 
 <!-- End Document
