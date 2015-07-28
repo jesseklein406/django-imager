@@ -47,15 +47,15 @@
           <nav id="navbar-collapse" class="centered collapse">
             <ul>
               <li><a href="/">About</a></li>
-              <li><a href="/" target="_blank">Source</a></li>
+              <li><a href="https://github.com/jesseklein406/django-imager" target="_blank">Source</a></li>
             </ul>
           </nav>
           <sections id="header-actions" class="centered">
           {% if user.is_authenticated %}
-            <button id="sign-out">Sign out</button>
+            <a href='{% url 'auth_logout' %}' id="sign-out" class="button">Sign out</a>
           {% else %}
-            <button id="sign-up" class="button-primary">Sign up</button>
-            <button id="sign-in">Sign in</button>
+            <a href="/accounts/register" id="sign-up" class="button button-primary">Sign up</a>
+            <a href='{% url 'auth_login' %}' id="sign-in" class="button">Sign in</a>
           {% endif %}
           </sections>
           <button id="navbar-toggle" class="centered">
@@ -66,6 +66,11 @@
         </div>
       </div>
     </header>
+    <div class="row">
+      <div class="columns two">
+        <h3>{{ name }}</h3>
+      </div>
+    </div>
     <main>
       {% block content %}
       {% endblock %}

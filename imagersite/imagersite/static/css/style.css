@@ -1,3 +1,22 @@
+
+a {
+    text-decoration: none;
+}
+
+main {
+    margin-top: 10%;
+}
+
+header .columns {
+    height: 80px;
+}
+
+.logo {
+  margin: 0;
+  padding-left: 0;
+  font-size: 3rem;
+}
+
 .block {
     text-align: center;
     white-space: nowrap;
@@ -15,27 +34,6 @@
     display: inline-block;
     vertical-align: middle;
 }
-
-
-a {
-    text-decoration: none;
-}
-
-
-main {
-    margin-top: 20%;
-}
-
-header .columns {
-    height: 80px;
-}
-
-.logo {
-  margin: 0;
-  padding-left: 0;
-  font-size: 3rem;
-}
-
 .collapse {
   display: none;
   visibility: none; }
