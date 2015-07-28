@@ -41,11 +41,14 @@ class HomepageTest(TestCase):
         )
 
     def test_login_link(self):
-        self.assertInHTML('<a href="localhost/login/">', self.response.content)
+        self.assertInHTML(
+            '<a href="localhost:8000/accounts/login/">',
+            self.response.content
+        )
 
     def test_register_link(self):
         self.assertInHTML(
-            '<a href="http://localhost/register/">',
+            '<a href="http://localhost:8000/accounts/register/">',
             self.response.content
         )
 
@@ -74,21 +77,21 @@ class LoginTest(TestCase):
 
     def test_login_success(self):
         params = {'username': self.user1.username, 'password': 'abc'}
-        response = self.client.post('/login/', params)
+        response = self.client.post('/accounts/login/', params)
         self.assertRedirects(response, '/', target_status_code=200)
         self.assertInHTML(self.user1.first_name, response.content)
 
     def test_logout_success(self):
         self.client.login(username=self.user1.username, password='abc')
-        response = self.client.get('/logout/')
+        response = self.client.get('/accounts/logout/')
         self.assertRedirects(response, '/', target_status_code=200)
-        self.assertNotIn(self.user1.username, response.content)
+        self.assertNotIn(self.user1.first_name, response.content)
 
     def test_first_image_in_home(self):
         self.client.login(username=self.user1.username, password='abc')
         response = self.client.get('/')
         self.assertEqual(
-            response.context['photo'].photo,
+            response.context['photo'],
             self.home_photo.photo
         )
         self.assertInHTML('<img src="john.jpg">', response.content)
