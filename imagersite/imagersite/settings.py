@@ -42,7 +42,10 @@ INSTALLED_APPS = (
     'imager_profile',
     'imager_images',
     'bootstrap3',
+    'registration',
 )
+
+ACCOUNT_ACTIVATION_DAYS = 7
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
