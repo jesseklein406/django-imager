@@ -60,6 +60,10 @@ MIDDLEWARE_CLASSES = (
 
 ROOT_URLCONF = 'imagersite.urls'
 
+# URL Conf Imports
+INCLUDE_REGISTER_URL = True
+INCLUDE_AUTH_URLS = True
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -117,10 +121,6 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "imagersite/static"),
 )
 
-# URL Conf Imports
-INCLUDE_REGISTER_URL = True
-INCLUDE_AUTH_URLS = True
-
 # Media file handling
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media_test' if TESTING else 'media')
@@ -129,3 +129,6 @@ MEDIA_TEST = os.path.join(BASE_DIR, 'media_test')
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 SITE_ID = 1
+
+# Login Behavior
+LOGIN_REDIRECT_URL = '/'
