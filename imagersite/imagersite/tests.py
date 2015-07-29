@@ -109,7 +109,7 @@ class LiveServerTest(LiveServerTestCase):
         sign_out = self.selenium.find_element_by_id("sign-out")
         self.assertEqual('Sign out', sign_out.text)   # Sign out is there
         user_name = self.selenium.find_element_by_id("user-name")
-        self.assertIn(self.user1.username, user_name.text)
+        self.assertEqual(self.user1.username, user_name.text)
 
     def test_logout_success(self):
         self.login_helper('john', 'abc')
@@ -169,4 +169,4 @@ class LiveServerTest(LiveServerTestCase):
         )
         self.login_helper('joseph', '123')
         user_name = self.selenium.find_element_by_id("user-name")
-        self.assertIn('joseph', user_name.text)
+        self.assertEqual('joseph', user_name.text)
