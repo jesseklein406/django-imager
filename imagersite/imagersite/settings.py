@@ -126,7 +126,7 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media_test' if TESTING else 'media')
 MEDIA_TEST = os.path.join(BASE_DIR, 'media_test')
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
 
 SITE_ID = 1
 

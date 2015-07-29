@@ -7,6 +7,7 @@ from django.contrib.auth.models import User
 from imager_images.models import Photo
 import factory
 from selenium.webdriver.firefox.webdriver import WebDriver
+from django.core import mail
 
 
 class UserFactory(factory.django.DjangoModelFactory):
@@ -159,4 +160,13 @@ class LiveServerTest(LiveServerTestCase):
             '%s%s' % (self.live_server_url, '/accounts/register/complete/')
         )
 
-        self.assertEqual(len(User.objects.all()), 2)   # john + joseph
+        link_end = mail.outbox[0].body.split('days:')[1].split()[0][18:]
+        link = '%s%s' % (self.live_server_url, link_end)
+        self.selenium.get(link)
+        self.assertEqual(
+            self.selenium.current_url,
+            '%s%s' % (self.live_server_url, '/accounts/activate/complete/')
+        )
+        self.login_helper('joseph', '123')
+        user_name = self.selenium.find_element_by_id("user-name")
+        self.assertIn('joseph', user_name.text)
