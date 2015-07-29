@@ -20,11 +20,11 @@ class Photo(models.Model):
         related_name='photos'
     )
     photo = models.ImageField(upload_to='photo_files/%Y-%m-%d')
-    title = models.CharField(max_length=256)
-    description = models.TextField()
+    title = models.CharField(max_length=256, blank=True)
+    description = models.TextField(blank=True)
     date_uploaded = models.DateField(auto_now_add=True)
     date_modified = models.DateField(auto_now=True)
-    date_published = models.DateField(null=True)
+    date_published = models.DateField(null=True, blank=True)
     published = models.CharField(
         max_length=256,
         choices=PUBLISHED_CHOICES,
@@ -47,10 +47,10 @@ class Album(models.Model):
         related_name='albums'
     )
     title = models.CharField(max_length=256)
-    description = models.TextField()
+    description = models.TextField(blank=True)
     date_uploaded = models.DateField(auto_now_add=True)
     date_modified = models.DateField(auto_now=True)
-    date_published = models.DateField(null=True)
+    date_published = models.DateField(null=True, blank=True)
     published = models.CharField(
         max_length=256,
         choices=PUBLISHED_CHOICES,
