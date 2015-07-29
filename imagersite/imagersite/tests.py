@@ -2,11 +2,12 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import unicode_literals
-from django.test import TestCase, Client
+from django.test import TestCase, Client, LiveServerTestCase
 from django.contrib.auth.models import User
 from imager_images.models import Photo
 # from imager_profile.models import ImagerProfile
 import factory
+from selenium.webdriver.firefox.webdriver import WebDriver
 
 
 class UserFactory(factory.django.DjangoModelFactory):
@@ -27,33 +28,68 @@ class PhotoFactory(factory.django.DjangoModelFactory):
         )
 
 
-class HomepageTest(TestCase):
+class HomepageClientTest(TestCase):
     def setUp(self):
         self.response = Client().get('/')
 
     def test_home_template(self):
         self.assertTemplateUsed(self.response, 'index.html')
 
+
+class HomepageLiveServerTest(LiveServerTestCase):
+    fixtures = ['user-data.json']
+
+    @classmethod
+    def setUpClass(cls):
+        super(HomepageLiveServerTest, cls).setUpClass()
+        cls.selenium = WebDriver()
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.selenium.quit()
+        super(HomepageLiveServerTest, cls).tearDownClass()
+
     def test_home_photo(self):
-        self.assertInHTML(
-            '<img src="static/images/django_1024x768.png">',
-            self.response.content
+        self.selenium.get('%s%s' % (self.live_server_url, '/'))
+        home_photo = self.selenium.find_element_by_id("main-photo")
+        home_photo_url = home_photo.get_attribute('src')
+        self.assertIn(
+            'static/images/django_1024x768.png',
+            home_photo_url
         )
 
     def test_login_link(self):
-        self.assertInHTML(
-            '<a href="localhost:8000/accounts/login/">',
-            self.response.content
+        self.selenium.get('%s%s' % (self.live_server_url, '/'))
+        login_link = self.selenium.find_element_by_id("sign-in")
+        login_link_href = login_link.get_attribute('href')
+        self.assertIn(
+            'accounts/login',
+            login_link_href
         )
 
     def test_register_link(self):
-        self.assertInHTML(
-            '<a href="http://localhost:8000/accounts/register/">',
-            self.response.content
+        self.selenium.get('%s%s' % (self.live_server_url, '/'))
+        register_link = self.selenium.find_element_by_id("sign-up")
+        register_link_href = register_link.get_attribute('href')
+        self.assertIn(
+            'accounts/register',
+            register_link_href
         )
 
 
-class LoginTest(TestCase):
+class LoginLiveServerTest(LiveServerTestCase):
+    fixtures = ['user-data.json']
+
+    @classmethod
+    def setUpClass(cls):
+        super(HomepageLiveServerTest, cls).setUpClass()
+        cls.selenium = WebDriver()
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.selenium.quit()
+        super(HomepageLiveServerTest, cls).tearDownClass()
+
     def setUp(self):
         self.user1 = UserFactory(
             username='john',
@@ -73,31 +109,55 @@ class LoginTest(TestCase):
         )
         self.home_photo.save()
 
-        self.client = Client()
-
     def test_login_success(self):
-        params = {'username': self.user1.username, 'password': 'abc'}
-        response = self.client.post('/accounts/login/', params)
-        self.assertRedirects(response, '/', target_status_code=200)
-        self.assertInHTML(self.user1.first_name, response.content)
+        self.selenium.get('%s%s' % (self.live_server_url, '/login/'))
+
+        username_input = self.selenium.find_element_by_name("id_username")
+        username_input.send_keys('john')
+        password_input = self.selenium.find_element_by_name("id_password")
+        password_input.send_keys('abc')
+        self.selenium.find_element_by_xpath('//input[@value="Sign in"]').click()
+
+        self.assertEqual(self.selenium.current_url, 'http://localhost:8081/')
+        sign_out = self.selenium.find_element_by_id("sign-out")
+        self.assertIn('Sign out', sign_out.text)
+        user_name = self.selenium.find_element_by_id("user-name")
+        self.assertIn(self.user1.first_name, user_name.text)
 
     def test_logout_success(self):
-        self.client.login(username=self.user1.username, password='abc')
-        response = self.client.get('/accounts/logout/')
-        self.assertRedirects(response, '/', target_status_code=200)
-        self.assertNotIn(self.user1.first_name, response.content)
+        self.selenium.get('%s%s' % (self.live_server_url, '/login/'))
+
+        username_input = self.selenium.find_element_by_name("id_username")
+        username_input.send_keys('john')
+        password_input = self.selenium.find_element_by_name("id_password")
+        password_input.send_keys('abc')
+        self.selenium.find_element_by_xpath('//input[@value="Sign in"]').click()
+
+        self.selenium.find_element_by_id("sign-out").click()
+
+        self.assertEqual(self.selenium.current_url, 'http://localhost:8081/')
+        sign_in = self.selenium.find_element_by_id("sign-in")
+        self.assertIn('Sign in', sign_in.text)
 
     def test_first_image_in_home(self):
-        self.client.login(username=self.user1.username, password='abc')
-        response = self.client.get('/')
-        self.assertEqual(
-            response.context['photo'],
-            self.home_photo.photo
+        self.selenium.get('%s%s' % (self.live_server_url, '/login/'))
+
+        username_input = self.selenium.find_element_by_name("id_username")
+        username_input.send_keys('john')
+        password_input = self.selenium.find_element_by_name("id_password")
+        password_input.send_keys('abc')
+        self.selenium.find_element_by_xpath('//input[@value="Sign in"]').click()
+
+        home_photo = self.selenium.find_element_by_id("main-photo")
+        home_photo_url = home_photo.get_attribute('src')
+        self.assertIn(
+            'static/images/john.jpg',
+            home_photo_url
         )
-        self.assertInHTML('<img src="john.jpg">', response.content)
 
 
 class RegTest(TestCase):
+
     def setUp(self):
         self.client = Client()
 
