@@ -60,6 +60,10 @@ MIDDLEWARE_CLASSES = (
 
 ROOT_URLCONF = 'imagersite.urls'
 
+# URL Conf Imports
+INCLUDE_REGISTER_URL = True
+INCLUDE_AUTH_URLS = True
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -111,7 +115,6 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
-
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATICFILES_DIRS = (
@@ -126,3 +129,6 @@ MEDIA_TEST = os.path.join(BASE_DIR, 'media_test')
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 SITE_ID = 1
+
+# Login Behavior
+LOGIN_REDIRECT_URL = '/'
