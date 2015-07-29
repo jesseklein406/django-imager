@@ -46,15 +46,15 @@ class AlbumFactory(factory.django.DjangoModelFactory):
 
 class PhotoTestCase(TestCase):
     """Test photos can be created and assigned to users."""
-    @classmethod
-    def setUp(cls):
-        cls.user1 = UserFactory()
-        cls.user1.set_password('secret')
-        cls.user1.save()
-        for i in range(10):
-            PhotoFactory(user=cls.user1)
 
-    def tearDown(cls):
+    def setUp(self):
+        self.user1 = UserFactory()
+        self.user1.set_password('secret')
+        self.user1.save()
+        for i in range(10):
+            PhotoFactory(user=self.user1)
+
+    def tearDown(self):
         User.objects.all().delete()
         rmtree(settings.MEDIA_TEST)
 
@@ -81,20 +81,20 @@ class PhotoTestCase(TestCase):
 
 class AlbumTestCase(TestCase):
     """Test albums can be created and assigned to users and albums."""
-    @classmethod
-    def setUp(cls):
-        cls.user1 = UserFactory()
-        cls.user1.set_password('secret')
-        cls.user1.save()
-        cls.album1 = AlbumFactory(user=cls.user1)
-        cls.album2 = AlbumFactory(user=cls.user1)
-        cls.pics = []
-        for i in range(5):
-            pic = PhotoFactory(user=cls.user1)
-            pic.save()
-            cls.pics.append(pic)
 
-    def tearDown(cls):
+    def setUp(self):
+        self.user1 = UserFactory()
+        self.user1.set_password('secret')
+        self.user1.save()
+        self.album1 = AlbumFactory(user=self.user1)
+        self.album2 = AlbumFactory(user=self.user1)
+        self.pics = []
+        for i in range(5):
+            pic = PhotoFactory(user=self.user1)
+            pic.save()
+            self.pics.append(pic)
+
+    def tearDown(self):
         User.objects.all().delete()
         rmtree(settings.MEDIA_TEST)
 
