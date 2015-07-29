@@ -54,7 +54,7 @@
           {% if user.is_authenticated %}
             <a href='{% url 'auth_logout' %}' id="sign-out" class="button">Sign out</a>
           {% else %}
-            <a href="/accounts/register" id="sign-up" class="button button-primary">Sign up</a>
+            <a href="/accounts/register/" id="sign-up" class="button button-primary">Sign up</a>
             <a href='{% url 'auth_login' %}' id="sign-in" class="button">Sign in</a>
           {% endif %}
           </sections>
