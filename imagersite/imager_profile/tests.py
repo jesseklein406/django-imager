@@ -73,6 +73,35 @@ class UserTest(TestCase):
         self.profile1.web_url = 'astrophotography'
         self.assertEqual(self.profile1.web_url, 'astrophotography')
 
+    # Test 3
+    # Check that camera field can optionally hold data
+    def test_camera_field_null(self):
+        self.assertFalse(self.profile1.camera)
+        self.profile1.camera = None
+        self.assertEqual(self.profile1.camera, None)
+
+    # Test 4
+    # Check that address field can optionally hold data
+    def test_address_field_null(self):
+        self.assertFalse(self.profile1.address)
+        self.profile1.address = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+        self.profile.save()
+        self.assertEqual(self.profile1.address, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
+
+    # Test 5
+    # Check that web_url field can optionally hold data
+    def test_web_url_field_null(self):
+        self.assertFalse(self.profile1.web_url)
+        self.profile1.web_url = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+        self.assertEqual(self.profile1.web_url, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
+
+    # Test 6
+    # Check that type_photography field can optionally hold data
+    def test_type_photography_field_null(self):
+        self.assertFalse(self.profile1.type_photography)
+        self.profile1.web_url = ''
+        self.assertEqual(self.profile1.web_url, '')
+
     # Test 7
     # Check that is_active property works as expected
     def test_is_active(self):
