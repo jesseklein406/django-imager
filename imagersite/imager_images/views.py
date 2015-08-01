@@ -9,15 +9,15 @@ from braces.views import LoginRequiredMixin
 
 
 class LibraryView(LoginRequiredMixin, ListView):
-    model = Album
-    template_name = 'images/list.html'
-
-
-class AlbumView(LoginRequiredMixin, ListView):
     model = Photo
-    template_name = 'images/list.html'
+    template_name = 'imager_images/list.html'
+
+
+# class AlbumView(LoginRequiredMixin, ListView):
+#     model = Photo
+#     template_name = 'images/list.html'
 
 
 class PhotoView(LoginRequiredMixin, DetailView):
     model = Photo
-    template_name = 'images/photo.html'
+    template_name = 'imager_images/photo.html'
