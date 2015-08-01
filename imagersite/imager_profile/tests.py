@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+"""#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 from __future__ import unicode_literals
@@ -141,3 +141,4 @@ class UserTest(TestCase):
     # Check string representation of profile
     def test_string_profile(self):
         self.assertEqual(str(self.profile1), 'badass')
+"""
