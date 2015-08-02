@@ -64,7 +64,7 @@ nav li a {
 #header-actions li {
     display: block;
     list-style: none;
-    margin: 0;
+    margin: 0 0 0 1.5rem;
     float: left;
 }
 
@@ -85,7 +85,7 @@ nav li a {
   #navbar-toggle .icon-bar + .icon-bar {
     margin-top: 4px; }
 
-@media (min-width: 400px) {
+@media (min-width: 700px) {
   .collapse {
     display: inline-block !important;
     visibility: visible !important;

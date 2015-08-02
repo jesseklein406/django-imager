@@ -44,15 +44,14 @@
       <header class="u-full-width">
         <div class="container">
           
-        <div class="row">
-          <div class="three columns">
-            <a href='{% url "home" %}' class="logo">Django-Imager</a>
-          </div>
+          {% block logo %}
+          <a href='{% url "home" %}' class="logo">Django-Imager</a>
+          {% endblock %}
 
-          <div class="nine columns">
-          
+          <div id="header-right" class="u-pull-right">
+        
             {% block nav %}
-            <nav id="navbar-collapse" class="collapse u-pull-right">
+            <nav id="navbar-collapse" class="collapse u-pull-left">
               <ul class="u-cf">
                 <li><a href="/">About</a></li>
                 <li><a href="https://github.com/jesseklein406/django-imager" target="_blank">Source</a></li>
@@ -64,12 +63,12 @@
               <span class="icon-bar"></span>
             </button>
             {% endblock %}
-            
+              
             {% block header_actions %}
             <ul id="header-actions" class="u-pull-right">
             {% if user.is_authenticated %}
               <li><h4 id="user-name">{{ user.username }}</h3></li>
-<!--               <li><a href='{% url 'auth_logout' %}' id="sign-out" class="button">Sign out</a></li> -->
+              <li><a href='{% url 'auth_logout' %}' id="sign-out" class="button">Sign out</a></li>
             {% else %}
               <li><a href="/accounts/register/" id="sign-up" class="button button-primary">Sign up</a></li>
               <li><a href='{% url 'auth_login' %}' id="sign-in" class="button">Sign in</a></li>
@@ -77,24 +76,25 @@
             </ul>
             {% endblock %}
             
-    
-          </div><!-- end column -->
-        </div><!-- end row -->
+          </div>
+            
         </div><!-- end container -->
       </header>
       {% endblock %}
     
     <!-- Main
     –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-      <main>
-        {% block content %}
-        {% endblock %}
-      </main>
-    
-    </div>
+      <div class="container">
+        <main>
+          {% block content %}
+          {% endblock %}
+        </main>
+      </div><!-- end container -->
+    </div><!-- end wrapper -->
 
   <!-- End Document
     –––––––––––––––––––––––––––––––––––––––––––––––––– -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script src={% static "js/imager.js" %}></script>
   </body>
 </html>
