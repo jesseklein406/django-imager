@@ -1,96 +1,96 @@
 {% load staticfiles %}
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
 
-  <!-- Basic Page Needs
-  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-  <meta charset="utf-8">
-  {% block title %}
-  <title>Django Imager</title>
-  {% endblock %}
-  <meta name="description" content="A simple photo sharing app built on Django.">
-  <meta name="author" content="Jesse Klein and Jonathan Stallings">
-
-  <!-- Mobile Specific Metas
-  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-
-  <!-- FONT
-  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-  <link href="//fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
-
-  <!-- CSS
-  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-  <link rel="stylesheet" href={% static "css/normalize.css" %}>
-  <link rel="stylesheet" href={% static "css/skeleton.css" %}>
-  <link rel="stylesheet" href={% static "css/style.css" %}>
-
-  <!-- Favicon
-  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-  <link rel="icon" type="image/png" href={% static "images/favicon.png" %}>
-
-</head>
-<body>
-
-
-  <!-- Primary Page Layout
-  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-  <div class="container">
-  
-  <!-- Header
-  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-    {% block header %}
-    <header>
-      <div class="row">
-        <div class="four columns block">
-          <a href='{% url "home" %}' class="logo">Django-Imager</a>
-        </div>
-        <div class="eight columns block">
-          {% block nav %}
-          <nav id="navbar-collapse" class="centered collapse">
-            <ul>
-              <li><a href="/">About</a></li>
-              <li><a href="https://github.com/jesseklein406/django-imager" target="_blank">Source</a></li>
-            </ul>
-          </nav>
-          {% endblock %}
-          {% block header_actions %}
-          <section id="header-actions" class="centered">
-          {% if user.is_authenticated %}
-            <a href='{% url 'auth_logout' %}' id="sign-out" class="button">Sign out</a>
-          {% else %}
-            <a href="/accounts/register/" id="sign-up" class="button button-primary">Sign up</a>
-            <a href='{% url 'auth_login' %}' id="sign-in" class="button">Sign in</a>
-          {% endif %}
-          </section>
-          {% endblock %}
-          <button id="navbar-toggle" class="centered">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-        </div>
-      </div>
-    </header>
+    <!-- Basic Page Needs
+    –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <meta charset="utf-8">
+    {% block title %}
+    <title>Django Imager</title>
     {% endblock %}
-    <div class="row">
-      <div class="columns two">
-        <h3 id="user-name">{{ user.username }}</h3>
-      </div>
-    </div>
-  
-  <!-- Main
-  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-    <main>
-      {% block content %}
-      {% endblock %}
-    </main>
-  
-  </div>
+    <meta name="description" content="A simple photo sharing app built on Django.">
+    <meta name="author" content="Jesse Klein and Jonathan Stallings">
 
-<!-- End Document
-  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-</body>
+    <!-- Mobile Specific Metas
+    –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- FONT
+    –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <link href="//fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
+
+    <!-- CSS
+    –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <link rel="stylesheet" href={% static "css/normalize.css" %}>
+    <link rel="stylesheet" href={% static "css/skeleton.css" %}>
+    <link rel="stylesheet" href={% static "css/style.css" %}>
+
+    <!-- Favicon
+    –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <link rel="icon" type="image/png" href={% static "images/favicon.png" %}>
+
+  </head>
+  <body>
+
+
+    <!-- Primary Page Layout
+    –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <div class="container">
+    
+    <!-- Header
+    –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+      {% block header %}
+      <header>
+        <div class="row">
+          <div class="four columns block">
+            <a href='{% url "home" %}' class="logo">Django-Imager</a>
+          </div>
+          <div class="eight columns block">
+            {% block nav %}
+            <nav id="navbar-collapse" class="centered collapse">
+              <ul>
+                <li><a href="/">About</a></li>
+                <li><a href="https://github.com/jesseklein406/django-imager" target="_blank">Source</a></li>
+              </ul>
+            </nav>
+            {% endblock %}
+            {% block header_actions %}
+            <section id="header-actions" class="centered">
+            {% if user.is_authenticated %}
+              <a href='{% url 'auth_logout' %}' id="sign-out" class="button">Sign out</a>
+            {% else %}
+              <a href="/accounts/register/" id="sign-up" class="button button-primary">Sign up</a>
+              <a href='{% url 'auth_login' %}' id="sign-in" class="button">Sign in</a>
+            {% endif %}
+            </section>
+            {% endblock %}
+            <button id="navbar-toggle" class="centered">
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+          </div>
+        </div>
+      </header>
+      {% endblock %}
+      <div class="row">
+        <div class="columns two">
+          <h3 id="user-name">{{ user.username }}</h3>
+        </div>
+      </div>
+    
+    <!-- Main
+    –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+      <main>
+        {% block content %}
+        {% endblock %}
+      </main>
+    
+    </div>
+
+  <!-- End Document
+    –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+  </body>
 </html>
