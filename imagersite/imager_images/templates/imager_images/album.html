@@ -2,12 +2,23 @@
 {% load thumbnail %}
 {% block content %}
     <div class="main">
-    {% for photo in photos %}
-        <a href="{% url 'photo' pk=photo.id %}">
-            {% thumbnail photo.photo "200" as im %}
-            <img src="{{ im.url }}">
-            {% endthumbnail %}
-        </a>
-    {% endfor %}
+        <div class="photos">
+            <div class="row">
+            {% for photo in photos %}
+                <div class="three columns">
+                    <a href="{% url 'photo' pk=photo.id %}">
+                        {% thumbnail photo.photo "200" as im %}
+                        <img src="{{ im.url }}">
+                        {% endthumbnail %}           
+                    </a>
+                    <p>{{ photo.title }}</p>
+                </div>
+            {% if forloop.counter|divisibleby:4 %}
+            </div>
+            <div class="row">
+            {% endif %}
+            {% endfor %}
+            </div>
+        </div>
     </div>
 {% endblock %}

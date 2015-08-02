@@ -6,7 +6,7 @@ from django.conf import settings
 from django.test import TestCase
 import factory
 from faker import Faker
-from django.test import LiveServerTestCase
+from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium.webdriver.firefox.webdriver import WebDriver
 from django.test.utils import override_settings
 from .models import Album, Photo
@@ -132,7 +132,7 @@ class AlbumTestCase(TestCase):
 
 
 @override_settings(DEBUG=True)
-class LiveServerTest(LiveServerTestCase):
+class LiveServerTest(StaticLiveServerTestCase):
     fixtures = ['user-data.json']
 
     @classmethod

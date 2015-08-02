@@ -1,32 +1,51 @@
 {% extends "base.html" %}
 {% load thumbnail %}
+{% load staticfiles %}
 {% block content %}
     <div class="main">
         <div class="albums">
             <h3>Albums:</h3>
-            {% for album in media.0 %}
-            <a href="{% url 'album' pk=album.id %}">
-                {% if album.cover %}
-                {% thumbnail album.cover.photo "200" as im %}
-                <img src="{{ im.url }}">
-                {% endthumbnail %}
-                {% else %}
-                {% thumbnail "imagersite/static/images/django_1024x768.png" "200" as im %}
-                <img src="{{ im.url }}" alt="Django Unchained">
-                {% endthumbnail %}
-                {% endif %}
-            </a>
+            <div class="row">
+                {% for album in media.0 %}
+                <div class="three columns">
+                    <a href="{% url 'album' pk=album.id %}">
+                        {% if album.cover %}
+                        {% thumbnail album.cover.photo "200" as im %}
+                        <img src="{{ im.url }}">
+                        {% endthumbnail %}
+                        {% else %}
+                        {% thumbnail "django_1024x768.png" "200" as im %}
+                        <img src="{{ im.url }}" alt="Django Unchained">
+                        {% endthumbnail %}
+                        {% endif %}
+                    </a>
+                    <p>{{ album.title }}</p>
+                </div>
+            {% if forloop.counter|divisibleby:4 %}
+            </div>
+            <div class="row">
+            {% endif %}
             {% endfor %}
+            </div>
         </div>
         <div class="photos">
             <h3>Photos:</h3>
+            <div class="row">
             {% for photo in media.1 %}
-            <a href="{% url 'photo' pk=photo.id %}">
-                {% thumbnail photo.photo "200" as im %}
-                <img src="{{ im.url }}">
-                {% endthumbnail %}
-            </a>
+                <div class="three columns">
+                    <a href="{% url 'photo' pk=photo.id %}">
+                        {% thumbnail photo.photo "200" as im %}
+                        <img src="{{ im.url }}">
+                        {% endthumbnail %}
+                    </a>
+                    <p>{{ photo.title }}</p>
+                </div>
+            {% if forloop.counter|divisibleby:4 %}
+            </div>
+            <div class="row">
+            {% endif %}
             {% endfor %}
+            </div>
         </div>
     </div>
 {% endblock %}
