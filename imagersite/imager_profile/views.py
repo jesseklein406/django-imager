@@ -9,4 +9,6 @@ from .models import ImagerProfile
 class ProfileDetailView(LoginRequiredMixin, DetailView):
     model = ImagerProfile
     template_name = "imager_profile/profile_detail.html"
-        
+
+    def get_object(self):
+        return self.request.user
