@@ -63,3 +63,9 @@ media_test/
 # Database
 db.sqlite3
 testdb.sqlite3
+
+
+# Sass Cache
+.sass-cache/
+*.css.map
+*.scss

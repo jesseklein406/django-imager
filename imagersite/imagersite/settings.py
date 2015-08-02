@@ -26,9 +26,9 @@ SECRET_KEY = '=l8!p3)j!gw59j1p+d#vkpp-e!8smm%4_=y_6&k1=0o5qd53b^'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+THUMBNAIL_DEBUG = True
 
 ALLOWED_HOSTS = []
-
 
 # Application definition
 
@@ -43,6 +43,7 @@ INSTALLED_APPS = (
     'registration',
     'imager_profile',
     'imager_images',
+    'sorl.thumbnail',
 )
 
 ACCOUNT_ACTIVATION_DAYS = 7
@@ -126,9 +127,7 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media_test' if TESTING else 'media')
 MEDIA_TEST = os.path.join(BASE_DIR, 'media_test')
 
-EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
-
 SITE_ID = 1
 
 # Login Behavior
-LOGIN_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = '/profile'

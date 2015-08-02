@@ -25,10 +25,11 @@ urlpatterns = patterns(
     url(r'^$', IndexView.as_view(), name='home'),
     url(r'^accounts/', include('registration.backends.default.urls')),
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^images/', include('imager_images.urls')),
+    url(r'^profile/', include('imager_profile.urls', namespace='profile'))
 )
 
 if settings.DEBUG:
     urlpatterns += static(
         settings.MEDIA_URL, document_root=settings.MEDIA_ROOT
     )
-

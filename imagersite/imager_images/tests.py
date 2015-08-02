@@ -6,7 +6,9 @@ from django.conf import settings
 from django.test import TestCase
 import factory
 from faker import Faker
-
+from django.contrib.staticfiles.testing import StaticLiveServerTestCase
+from selenium.webdriver.firefox.webdriver import WebDriver
+from django.test.utils import override_settings
 from .models import Album, Photo
 
 fake = Faker()
@@ -128,3 +130,46 @@ class AlbumTestCase(TestCase):
         self.user1.delete()
         self.assertEqual(Album.objects.count(), 0)
 
+
+@override_settings(DEBUG=True)
+class LiveServerTest(StaticLiveServerTestCase):
+    fixtures = ['user-data.json']
+
+    @classmethod
+    def setUpClass(cls):
+        super(LiveServerTest, cls).setUpClass()
+        cls.selenium = WebDriver()
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.selenium.quit()
+        super(LiveServerTest, cls).tearDownClass()
+
+    def setUp(self):
+        self.user1 = UserFactory()
+        self.user1.set_password('secret')
+        self.user1.save()
+        self.album1 = AlbumFactory(user=self.user1)
+        for i in range(10):
+            pic = PhotoFactory(user=self.user1)
+            self.album1.photos.add(pic)
+            pic.save()
+        # self.album1.cover = pic
+        self.album1.save()
+        pic.save()
+
+    def login_helper(self, username, password):
+        self.selenium.get('%s%s' % (self.live_server_url, '/accounts/login/'))
+
+        username_input = self.selenium.find_element_by_id("id_username")
+        username_input.send_keys(username)
+        password_input = self.selenium.find_element_by_id("id_password")
+        password_input.send_keys(password)
+        self.selenium.find_element_by_xpath('//input[@value="Log in"]').click()
+
+    def test_library(self):
+        self.login_helper(self.user1.username, 'secret')
+        self.selenium.get('%s%s' % (self.live_server_url, '/images/library/'))
+        images = self.selenium.find_elements_by_tag_name('img')
+        # import pdb; pdb.set_trace()
+        self.assertEqual(len(images), 11)
