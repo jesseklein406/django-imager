@@ -2,12 +2,15 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import unicode_literals
-from django.test import TestCase, Client, LiveServerTestCase
+from django.test import TestCase, Client
+from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from django.contrib.auth.models import User
 from imager_images.models import Photo
 import factory
 from selenium.webdriver.firefox.webdriver import WebDriver
 from django.core import mail
+from django.test.utils import override_settings
+from time import sleep
 
 
 class UserFactory(factory.django.DjangoModelFactory):
@@ -35,7 +38,8 @@ class HomepageClientTest(TestCase):
         self.assertTemplateUsed(response, 'index.html')
 
 
-class LiveServerTest(LiveServerTestCase):
+@override_settings(DEBUG=True)
+class LiveServerTest(StaticLiveServerTestCase):
     fixtures = ['user-data.json']
 
     @classmethod
@@ -47,6 +51,7 @@ class LiveServerTest(LiveServerTestCase):
     def tearDownClass(cls):
         cls.selenium.quit()
         super(LiveServerTest, cls).tearDownClass()
+        sleep(3)
 
     def setUp(self):
         self.user1 = UserFactory(
@@ -104,7 +109,7 @@ class LiveServerTest(LiveServerTestCase):
         # make sure we end up home
         self.assertEqual(
             self.selenium.current_url,
-            '%s%s' % (self.live_server_url, '/')
+            '%s%s%s%s' % (self.live_server_url, '/profile/', self.user1.id, '/')
         )
         sign_out = self.selenium.find_element_by_id("sign-out")
         self.assertEqual('Sign out', sign_out.text)   # Sign out is there
@@ -132,6 +137,7 @@ class LiveServerTest(LiveServerTestCase):
         first_photo.save()
 
         self.login_helper('john', 'abc')
+        self.selenium.get('%s%s' % (self.live_server_url, '/'))
 
         home_photo = self.selenium.find_element_by_id("main-photo")
         home_photo_url = home_photo.get_attribute('src')

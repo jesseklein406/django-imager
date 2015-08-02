@@ -10,6 +10,7 @@ from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium.webdriver.firefox.webdriver import WebDriver
 from django.test.utils import override_settings
 from .models import Album, Photo
+from time import sleep
 
 fake = Faker()
 
@@ -144,6 +145,7 @@ class LiveServerTest(StaticLiveServerTestCase):
     def tearDownClass(cls):
         cls.selenium.quit()
         super(LiveServerTest, cls).tearDownClass()
+        sleep(3)
 
     def setUp(self):
         self.user1 = UserFactory()
