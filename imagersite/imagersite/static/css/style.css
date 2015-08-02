@@ -7,14 +7,20 @@ main {
     margin-top: 10%;
 }
 
-header .columns {
-    height: 80px;
+
+header {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  height: 50px;
+}
+
+header ul, h4 {
+  margin: 0;
 }
 
 .logo {
-  margin: 0;
   padding-left: 0;
-  font-size: 3rem;
+  font-size: 2.5rem;
 }
 
 .block {
@@ -38,15 +44,27 @@ header .columns {
   display: none;
   visibility: none; }
 
+nav ul {
+  margin: 1rem;
+}
+
 nav li {
     display: block;
     list-style: none;
     float: left;
+    margin: 0;
 }
 
 nav li a {
     line-height: 2rem;
-    padding: 1.5rem;
+    padding-left: 1.5rem;
+}
+
+#header-actions li {
+    display: block;
+    list-style: none;
+    margin: 0;
+    float: left;
 }
 
 #navbar-toggle {
@@ -66,7 +84,7 @@ nav li a {
   #navbar-toggle .icon-bar + .icon-bar {
     margin-top: 4px; }
 
-@media (min-width: 750px) {
+@media (min-width: 400px) {
   .collapse {
     display: inline-block !important;
     visibility: visible !important;
