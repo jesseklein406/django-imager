@@ -1,10 +1,12 @@
 {% extends "base.html" %}
 {% load thumbnail %}
+{% load images_filters %}
 {% block content %}
+    {% if media.0|album_is_authorized:user %}
     <div class="main">
         <div class="photos">
             <div class="row">
-            {% for photo in photos %}
+            {% for photo in media.1|authorized_photos:user %}
                 <div class="three columns">
                     <a href="{% url 'photo' pk=photo.id %}">
                         {% thumbnail photo.photo "200" as im %}
@@ -21,4 +23,7 @@
             </div>
         </div>
     </div>
+    {% else %}
+    <p>Permission denied</p>
+    {% endif %}
 {% endblock %}

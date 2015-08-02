@@ -20,12 +20,13 @@ class LibraryView(LoginRequiredMixin, ListView):
 
 
 class AlbumView(LoginRequiredMixin, ListView):
-    context_object_name = 'photos'
+    context_object_name = 'media'
     template_name = 'imager_images/album.html'
 
     def get_queryset(self):
         album = get_object_or_404(Album, id=self.kwargs['pk'])
-        return album.photos.all()
+        photos = album.photos.all()
+        return [album, photos]
 
 
 class PhotoView(LoginRequiredMixin, DetailView):
