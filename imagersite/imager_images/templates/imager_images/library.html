@@ -1,6 +1,15 @@
 {% extends "base.html" %}
 {% load thumbnail %}
 {% load staticfiles %}
+
+{% block nav %}
+<nav id="navbar-collapse" class="collapse u-pull-left">
+  <ul class="u-cf">
+    <li><a href="{% url 'profile:detail' %}">Profile</a></li>
+  </ul>
+</nav>
+{% endblock %}
+
 {% block content %}
     <div class="main">
         <div class="albums">

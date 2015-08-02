@@ -1,5 +1,15 @@
 {% extends "base.html" %}
 {% load thumbnail %}
+
+{% block nav %}
+<nav id="navbar-collapse" class="collapse u-pull-left">
+  <ul class="u-cf">
+    <li><a href="{% url 'profile:detail' %}">Profile</a></li>
+    <li><a href="{% url 'library' %}">Library</a></li>
+  </ul>
+</nav>
+{% endblock %}
+
 {% block content %}
     <div class="main">
         <div class="photos">
@@ -9,7 +19,7 @@
                     <a href="{% url 'photo' pk=photo.id %}">
                         {% thumbnail photo.photo "200" as im %}
                         <img src="{{ im.url }}">
-                        {% endthumbnail %}           
+                        {% endthumbnail %}
                     </a>
                     <p>{{ photo.title }}</p>
                 </div>
