@@ -171,5 +171,5 @@ class LiveServerTest(StaticLiveServerTestCase):
         self.login_helper(self.user1.username, 'secret')
         self.selenium.get('%s%s' % (self.live_server_url, '/images/library/'))
         images = self.selenium.find_elements_by_tag_name('img')
-        import pdb; pdb.set_trace()
-        self.assertEqual(len(images), 1)
+        # import pdb; pdb.set_trace()
+        self.assertEqual(len(images), 11)

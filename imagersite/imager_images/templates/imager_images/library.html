@@ -14,9 +14,7 @@
                         <img src="{{ im.url }}">
                         {% endthumbnail %}
                         {% else %}
-                        {% thumbnail "django_1024x768.png" "200" as im %}
-                        <img src="{{ im.url }}" alt="Django Unchained">
-                        {% endthumbnail %}
+                        <img src="{% static 'images/django_thumb.jpg' %}" alt="Django Unchained">
                         {% endif %}
                     </a>
                     <p>{{ album.title }}</p>
