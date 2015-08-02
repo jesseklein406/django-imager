@@ -6,7 +6,9 @@
   <!-- Basic Page Needs
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <meta charset="utf-8">
+  {% block title %}
   <title>Django Imager</title>
+  {% endblock %}
   <meta name="description" content="A simple photo sharing app built on Django.">
   <meta name="author" content="Jesse Klein and Jonathan Stallings">
 
@@ -38,26 +40,31 @@
   
   <!-- Header
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    {% block header %}
     <header>
       <div class="row">
         <div class="four columns block">
-          <a href="/" class="logo">Django-Imager</a>
+          <a href='{% url "home" %}' class="logo">Django-Imager</a>
         </div>
         <div class="eight columns block">
+          {% block nav %}
           <nav id="navbar-collapse" class="centered collapse">
             <ul>
               <li><a href="/">About</a></li>
               <li><a href="https://github.com/jesseklein406/django-imager" target="_blank">Source</a></li>
             </ul>
           </nav>
-          <sections id="header-actions" class="centered">
+          {% endblock %}
+          {% block header_actions %}
+          <section id="header-actions" class="centered">
           {% if user.is_authenticated %}
             <a href='{% url 'auth_logout' %}' id="sign-out" class="button">Sign out</a>
           {% else %}
             <a href="/accounts/register/" id="sign-up" class="button button-primary">Sign up</a>
             <a href='{% url 'auth_login' %}' id="sign-in" class="button">Sign in</a>
           {% endif %}
-          </sections>
+          </section>
+          {% endblock %}
           <button id="navbar-toggle" class="centered">
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
@@ -66,11 +73,15 @@
         </div>
       </div>
     </header>
+    {% endblock %}
     <div class="row">
       <div class="columns two">
         <h3 id="user-name">{{ user.username }}</h3>
       </div>
     </div>
+  
+  <!-- Main
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
     <main>
       {% block content %}
       {% endblock %}
