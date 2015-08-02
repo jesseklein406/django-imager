@@ -6,7 +6,7 @@ from braces.views import LoginRequiredMixin
 from .models import ImagerProfile
 
 
-class ImagerProfileDetailView(LoginRequiredMixin, DetailView):
+class ProfileDetailView(LoginRequiredMixin, DetailView):
     model = ImagerProfile
     template_name = "imager_profile/profile_detail.html"
         
