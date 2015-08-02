@@ -130,4 +130,4 @@ MEDIA_TEST = os.path.join(BASE_DIR, 'media_test')
 SITE_ID = 1
 
 # Login Behavior
-LOGIN_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = '/profile'

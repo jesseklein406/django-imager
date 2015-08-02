@@ -26,6 +26,7 @@ urlpatterns = patterns(
     url(r'^accounts/', include('registration.backends.default.urls')),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^images/', include('imager_images.urls')),
+    url(r'^profile/', include('imager_profile.urls', namespace='profile'))
 )
 
 if settings.DEBUG:
