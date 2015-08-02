@@ -43,6 +43,7 @@ INSTALLED_APPS = (
     'registration',
     'imager_profile',
     'imager_images',
+    'sorl.thumbnail',
 )
 
 ACCOUNT_ACTIVATION_DAYS = 7

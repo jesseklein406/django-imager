@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load thumbnail %}
 {% block content %}
     <div class="main">
         <div class="albums">
@@ -6,9 +7,13 @@
             {% for album in media.0 %}
             <a href="{% url 'album' pk=album.id %}">
                 {% if album.cover %}
-                <img src="{{ album.cover.photo.url }}">
+                {% thumbnail album.cover.photo "200" as im %}
+                <img src="{{ im.url }}">
+                {% endthumbnail %}
                 {% else %}
-                <img src="/static/images/django_1024x768.png" alt="Django Unchained">
+                {% thumbnail "imagersite/static/images/django_1024x768.png" "200" as im %}
+                <img src="{{ im.url }}" alt="Django Unchained">
+                {% endthumbnail %}
                 {% endif %}
             </a>
             {% endfor %}
@@ -16,7 +21,11 @@
         <div class="photos">
             <h3>Photos:</h3>
             {% for photo in media.1 %}
-            <a href="{% url 'photo' pk=photo.id %}"><img src="{{ photo.photo.url }}"></a>
+            <a href="{% url 'photo' pk=photo.id %}">
+                {% thumbnail photo.photo "200" as im %}
+                <img src="{{ im.url }}">
+                {% endthumbnail %}
+            </a>
             {% endfor %}
         </div>
     </div>
