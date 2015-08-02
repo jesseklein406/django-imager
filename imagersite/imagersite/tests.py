@@ -109,10 +109,10 @@ class LiveServerTest(StaticLiveServerTestCase):
         # make sure we end up home
         self.assertEqual(
             self.selenium.current_url,
-            '%s%s%s%s' % (self.live_server_url, '/profile/', self.user1.id, '/')
+            '%s%s' % (self.live_server_url, '/profile/')
         )
         sign_out = self.selenium.find_element_by_id("sign-out")
-        self.assertEqual('Sign out', sign_out.text)   # Sign out is there
+        self.assertEqual('sign out', sign_out.text.lower())   # Sign out is there
         user_name = self.selenium.find_element_by_id("user-name")
         self.assertEqual(self.user1.username, user_name.text)
 
