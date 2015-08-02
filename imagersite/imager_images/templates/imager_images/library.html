@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block content %}
+    <div class="main">
+    {% for album in albums %}
+        <a href="{% url 'album' pk=album.id %}"><img src="{{ album.cover.photo.url }}"></a>
+    </div>
+    {% endfor %}
+{% endblock %}

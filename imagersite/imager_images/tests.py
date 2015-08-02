@@ -8,7 +8,7 @@ import factory
 from faker import Faker
 from django.test import LiveServerTestCase
 from selenium.webdriver.firefox.webdriver import WebDriver
-
+from django.test.utils import override_settings
 from .models import Album, Photo
 
 fake = Faker()
@@ -131,6 +131,7 @@ class AlbumTestCase(TestCase):
         self.assertEqual(Album.objects.count(), 0)
 
 
+@override_settings(DEBUG=True)
 class LiveServerTest(LiveServerTestCase):
     fixtures = ['user-data.json']
 
@@ -148,8 +149,14 @@ class LiveServerTest(LiveServerTestCase):
         self.user1 = UserFactory()
         self.user1.set_password('secret')
         self.user1.save()
+        self.album1 = AlbumFactory(user=self.user1)
         for i in range(10):
-            PhotoFactory(user=self.user1)
+            pic = PhotoFactory(user=self.user1)
+            self.album1.photos.add(pic)
+            pic.save()
+        self.album1.cover = pic
+        self.album1.save()
+        pic.save()
 
     def login_helper(self, username, password):
         self.selenium.get('%s%s' % (self.live_server_url, '/accounts/login/'))
@@ -164,5 +171,5 @@ class LiveServerTest(LiveServerTestCase):
         self.login_helper(self.user1.username, 'secret')
         self.selenium.get('%s%s' % (self.live_server_url, '/images/library/'))
         images = self.selenium.find_elements_by_tag_name('img')
-        # import pdb; pdb.set_trace()
-        self.assertEqual(len(images), 10)
+        import pdb; pdb.set_trace()
+        self.assertEqual(len(images), 1)

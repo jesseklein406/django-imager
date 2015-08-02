@@ -1,7 +1,0 @@
-{% extends "base.html" %}
-{% block content %}
-    <div class="main">
-    {% for photo in user.photos.all %}
-        <img src={{ photo.photo }}>
-    {% endfor %}
-{% endblock %}
