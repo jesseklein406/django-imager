@@ -1,5 +1,15 @@
 {% extends "base.html" %}
 {% load staticfiles %}
+
+{% block nav %}
+<nav id="navbar-collapse" class="collapse u-pull-left">
+  <ul class="u-cf">
+    <li><a href="{% url 'profile:detail' %}">Profile</a></li>
+    <li><a href="https://github.com/jesseklein406/django-imager" target="_blank">Source</a></li>
+  </ul>
+</nav>
+{% endblock %}
+
 {% block content %}
 <div class="container">
     <img id="main-photo" src='{{ photo }}' alt="django unchained" class="u-max-full-width">
