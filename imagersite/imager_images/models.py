@@ -60,7 +60,7 @@ class Album(models.Model):
         Photo,
         related_name='+',
         null=True,
-        blank=True
+        blank=True,
     )
 
     def __str__(self):

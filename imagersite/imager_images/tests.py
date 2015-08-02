@@ -154,7 +154,7 @@ class LiveServerTest(LiveServerTestCase):
             pic = PhotoFactory(user=self.user1)
             self.album1.photos.add(pic)
             pic.save()
-        self.album1.cover = pic
+        # self.album1.cover = pic
         self.album1.save()
         pic.save()
 

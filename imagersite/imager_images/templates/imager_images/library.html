@@ -1,8 +1,23 @@
 {% extends "base.html" %}
 {% block content %}
     <div class="main">
-    {% for album in albums %}
-        <a href="{% url 'album' pk=album.id %}"><img src="{{ album.cover.photo.url }}"></a>
+        <div class="albums">
+            <h3>Albums:</h3>
+            {% for album in media.0 %}
+            <a href="{% url 'album' pk=album.id %}">
+                {% if album.cover %}
+                <img src="{{ album.cover.photo.url }}">
+                {% else %}
+                <img src="/static/images/django_1024x768.png" alt="Django Unchained">
+                {% endif %}
+            </a>
+            {% endfor %}
+        </div>
+        <div class="photos">
+            <h3>Photos:</h3>
+            {% for photo in media.1 %}
+            <a href="{% url 'photo' pk=photo.id %}"><img src="{{ photo.photo.url }}"></a>
+            {% endfor %}
+        </div>
     </div>
-    {% endfor %}
 {% endblock %}

@@ -3,6 +3,6 @@
     <div class="main">
     {% for photo in photos %}
         <a href="{% url 'photo' pk=photo.id %}"><img src="{{ photo.photo.url }}"></a>
-    </div>
     {% endfor %}
+    </div>
 {% endblock %}

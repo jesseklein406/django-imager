@@ -10,12 +10,13 @@ from braces.views import LoginRequiredMixin
 
 
 class LibraryView(LoginRequiredMixin, ListView):
-    context_object_name = 'albums'
+    context_object_name = 'media'
     template_name = 'imager_images/library.html'
 
     def get_queryset(self):
         albums = get_list_or_404(Album, user=self.request.user)
-        return albums
+        photos = get_list_or_404(Photo, user=self.request.user)
+        return [albums, photos]
 
 
 class AlbumView(LoginRequiredMixin, ListView):
