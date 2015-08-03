@@ -1,6 +1,7 @@
 from __future__ import unicode_literals
 
 from django.contrib.auth.models import User
+from django.core.urlresolvers import reverse
 from django.db import models
 from django.utils.encoding import python_2_unicode_compatible
 
@@ -39,3 +40,6 @@ class ImagerProfile(models.Model):
     @property
     def is_active(self):
         return self.user.is_active
+
+    def get_absolute_url(self):
+        return reverse('profile:detail')
