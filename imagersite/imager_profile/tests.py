@@ -143,12 +143,12 @@ class LiveServerSplinterTest(LiveServerTestCase):
         self.user1.save()
 
     def login_helper(self, username, password):
-        self.selenium.visit('{}{}'.format(
+        self.browser.visit('{}{}'.format(
             self.live_server_url, '/accounts/login/')
         )
 
-        self.browser.fill('id_username', username)
-        self.browser.fill('id_password', password)
+        self.browser.fill('username', username)
+        self.browser.fill('password', password)
         self.browser.find_by_value('Log in').first.click()
 
     def test_non_auth_profile_redirect(self):
@@ -167,4 +167,10 @@ class LiveServerSplinterTest(LiveServerTestCase):
             self.browser.url, '{}{}'.format(
                 self.live_server_url, '/accounts/login/?next=/profile/edit/'
             )
+        )
+
+    def test_simple_login(self):
+        self.login_helper(self.user1.username, 'abc')
+        self.assertEqual(self.browser.url, '{}{}'.format(
+            self.live_server_url, '/profile/')
         )
