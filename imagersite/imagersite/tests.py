@@ -1,16 +1,18 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
 from __future__ import unicode_literals
+
 from django.test import TestCase, Client
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from django.contrib.auth.models import User
-from imager_images.models import Photo
-import factory
-from selenium.webdriver.firefox.webdriver import WebDriver
 from django.core import mail
 from django.test.utils import override_settings
+
+import factory
+from selenium.webdriver.firefox.webdriver import WebDriver
 from time import sleep
+
+from imager_images.models import Photo
 
 
 class UserFactory(factory.django.DjangoModelFactory):
@@ -105,13 +107,12 @@ class LiveServerTest(StaticLiveServerTestCase):
     def test_login_success(self):
         self.login_helper('john', 'abc')
 
-        # make sure we end up home
         self.assertEqual(
             self.selenium.current_url,
-            '%s%s%s%s' % (self.live_server_url, '/profile/', self.user1.id, '/')
+            '%s%s' % (self.live_server_url, '/profile/')
         )
         sign_out = self.selenium.find_element_by_id("sign-out")
-        self.assertEqual('Sign out', sign_out.text)   # Sign out is there
+        self.assertEqual('sign out', sign_out.text.lower())
         user_name = self.selenium.find_element_by_id("user-name")
         self.assertEqual(self.user1.username, user_name.text)
 
