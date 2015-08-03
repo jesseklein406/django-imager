@@ -3,12 +3,10 @@
 from __future__ import unicode_literals
 
 from django.test import TestCase
-from django.contrib.staticfiles.testing import StaticLiveServerTestCase
+from django.contrib.staticfiles.testing import LiveServerTestCase
 from django.contrib.auth.models import User
-from django.test.utils import override_settings
 
 import factory
-from selenium.webdriver.firefox.webdriver import WebDriver
 from splinter import Browser
 from time import sleep
 
@@ -121,8 +119,7 @@ class UserTest(TestCase):
         self.assertEqual(str(self.profile1), 'badass')
 
 
-@override_settings(DEBUG=True)
-class LiveServerSplinterTest(StaticLiveServerTestCase):
+class LiveServerSplinterTest(LiveServerTestCase):
 
     @classmethod
     def setUpClass(cls):
