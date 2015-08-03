@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block nav %}
+<nav id="navbar-collapse" class="collapse u-pull-left">
+  <ul class="u-cf">
+    <li><a href="{% url 'profile:detail' %}">Profile</a></li>
+    <li><a href="{% url 'library' %}">Library</a></li>
+  </ul>
+</nav>
+{% endblock %}
+
+{% block content %}
+    {% if album|album_is_authorized:user %}
+    <div class="main">
+        <form target="{{ url 'photo_edit' }}" action="post">
+            <label>Title: <input type="text" name="title"></label>
+            <label>Description: <input type="text" name="description"></label>
+            <label>Published: <select name="published">
+                <option value="private">Private</option>
+                <option value="shared">Shared</option>
+                <option value="public">Public</option>
+                </select>
+            </label>
+            <input type="submit" name="photoedit" value="Submit">
+        </form>
+    </div>
+    {% else %}
+    <p>Permission denied</p>
+    {% endif %}
+{% endblock %}
