@@ -16,7 +16,7 @@ class ProfileDetailView(LoginRequiredMixin, DetailView):
 
 class ProfileUpdateView(LoginRequiredMixin, UpdateView):
     model = ImagerProfile
-    fields = ('camera', 'address', 'web_url', 'type_photography')
+    fields = ['camera', 'address', 'web_url', 'type_photography']
 
     def get_object(self):
         return self.request.user
