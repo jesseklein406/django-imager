@@ -11,12 +11,12 @@
 
 {% block content %}
     <div class="main">
-        <form target="{{ url 'album_add' }}" action="post">
+        <form action="{% url 'album_add' %}" method="get">{% csrf_token %}
             <label>Title: <input type="text" name="title"></label>
             <label>Description: <input type="text" name="description"></label>
             <label>Photos: <select name="photos" size="6" multiple="multiple">
                 {% for photo in user.photos.all %}
-                <option value="{{ photo.title }}">{{ photo.title }}</option>
+                <option value="{{ photo.id }}">{{ photo.title }}</option>
                 {% endfor %}
                 </select>
             </label>
@@ -28,7 +28,7 @@
             </label>
             <label>Cover: <select name="cover">
                 {% for photo in user.photos.all %}
-                <option value="{{ photo.title }}">{{ photo.title }}</option>
+                <option value="{{ photo.id }}">{{ photo.title }}</option>
                 {% endfor %}
                 </select>
             </label>
