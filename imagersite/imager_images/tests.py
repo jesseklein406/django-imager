@@ -134,7 +134,7 @@ class AlbumTestCase(TestCase):
 
 @override_settings(DEBUG=True)
 class LiveServerTest(StaticLiveServerTestCase):
-    fixtures = ['user-data.json']
+    # fixtures = ['user-data.json']
 
     @classmethod
     def setUpClass(cls):
