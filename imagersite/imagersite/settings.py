@@ -129,6 +129,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media_test' if TESTING else 'media')
 MEDIA_TEST = os.path.join(BASE_DIR, 'media_test')
 
 SITE_ID = 1
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # Login Behavior
 LOGIN_REDIRECT_URL = '/profile'
