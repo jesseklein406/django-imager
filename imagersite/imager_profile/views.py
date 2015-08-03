@@ -1,10 +1,14 @@
 from __future__ import absolute_import
 
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
-from django.views.generic import DetailView, UpdateView
+from django.http import HttpResponseRedirect
+from django.shortcuts import render
+from django.views.generic import DetailView
 from braces.views import LoginRequiredMixin
 
+from .forms import ProfileUpdateForm, UserUpdateForm
 from .models import ImagerProfile
 
 
@@ -29,7 +33,32 @@ class ProfileDetailView(LoginRequiredMixin, DetailView):
         return self.request.user
 
 
-class ProfileUpdateView(LoginRequiredMixin, UpdateView):
-    model = ImagerProfile
-    fields = ['camera', 'address', 'web_url', 'type_photography']
-    template_name_suffix = '_update_form'
+@login_required
+def profile_update_view(request):
+    if request.method == 'POST':
+        profile_form = ProfileUpdateForm(
+            request.POST, instance=request.user.profile
+        )
+        user_form = UserUpdateForm(
+            request.POST, instance=request.user
+        )
+        if profile_form.is_valid() and user_form.is_valid():
+            profile_form.save()
+            user_form.save()
+            return HttpResponseRedirect(reverse('profile:detail'))
+        else:
+            context = {
+                'profile_form': profile_form.as_p, 'user_form': user_form.as_p
+            }
+            return render(
+                request, 'imager_profile/profile_edit.html', context
+            )
+    else:
+        profile_form = ProfileUpdateForm(instance=request.user.profile)
+        user_form = UserUpdateForm(instance=request.user)
+        context = {
+            'profile_form': profile_form.as_p, 'user_form': user_form.as_p
+        }
+        return render(
+            request, 'imager_profile/profile_edit.html', context
+        )
