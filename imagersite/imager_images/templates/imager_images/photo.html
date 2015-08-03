@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% load images_filters %}
+
+{% block nav %}
+<nav id="navbar-collapse" class="collapse u-pull-left">
+  <ul class="u-cf">
+    <li><a href="{% url 'profile:detail' %}">Profile</a></li>
+    <li><a href="{% url 'library' %}">Library</a></li>
+  </ul>
+</nav>
+{% endblock %}
+
+{% block content %}
+    {% if photo|photo_is_authorized:user %}
+    <div class="main">
+        <img src="{{ photo.photo.url }}">
+        <h3>{{ photo.title }}</h3>
+        <h4>{{ photo.user }}</h4>
+        <p>{{ photo.description }}</p>
+        <p>Date Uploaded: {{ photo.date_uploaded }}</p>
+        <p>Date Modified: {{ photo.date_modified }}</p>
+    </div>
+    {% else %}
+    <p>Permission denied</p>
+    {% endif %}
+{% endblock %}

@@ -1,10 +1,17 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+from __future__ import unicode_literals
 
 from django.test import TestCase
+from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from django.contrib.auth.models import User
-from .models import ImagerProfile
+from django.test.utils import override_settings
+
 import factory
+from selenium.webdriver.firefox.webdriver import WebDriver
+from time import sleep
+
+from .models import ImagerProfile
 
 
 class UserFactory(factory.Factory):
@@ -111,3 +118,45 @@ class UserTest(TestCase):
     # Check string representation of profile
     def test_string_profile(self):
         self.assertEqual(str(self.profile1), 'badass')
+
+
+@override_settings(DEBUG=True)
+class LiveServerTest(StaticLiveServerTestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        super(LiveServerTest, cls).setUpClass()
+        cls.selenium = WebDriver()
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.selenium.quit()
+        super(LiveServerTest, cls).tearDownClass()
+        sleep(3)
+
+    def setUp(self):
+        self.user1 = UserFactory(
+            username='john',
+            email='john@example.com',
+            first_name='John',
+            last_name='Stephenson'
+        )
+        self.user1.set_password('abc')
+        self.user1.save()
+
+    def login_helper(self, username, password):
+        self.selenium.get('%s%s' % (self.live_server_url, '/accounts/login/'))
+
+        username_input = self.selenium.find_element_by_id("id_username")
+        username_input.send_keys(username)
+        password_input = self.selenium.find_element_by_id("id_password")
+        password_input.send_keys(password)
+        self.selenium.find_element_by_xpath('//input[@value="Log in"]').click()
+
+    def test_non_auth_profile_redirect(self):
+        self.selenium.get('{}{}'.format(self.live_server_url, '/profile'))
+        self.assertEqual(
+            self.selenium.current_url, '{}{}'.format(
+                self.live_server_url, '/accounts/login/?next=/profile/'
+            )
+        )
