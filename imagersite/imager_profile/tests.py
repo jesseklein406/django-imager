@@ -1,32 +1,35 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-from __future__ import unicode_literals
+# from __future__ import unicode_literals
 
-from django.test import TestCase
 from django.contrib.staticfiles.testing import LiveServerTestCase
 from django.contrib.auth.models import User
+from django.core.urlresolvers import reverse
+from django.test import Client, TestCase
 
 import factory
+from faker import Faker
 from splinter import Browser
 from time import sleep
 
 from .models import ImagerProfile
 
+fake = Faker()
 
-class UserFactory(factory.Factory):
+
+class UserFactory(factory.django.DjangoModelFactory):
+    """Create a fake user."""
     class Meta:
         model = User
 
-    username = 'badass'
-    email = factory.LazyAttribute(
-        lambda a: '{}@example.com'.format(a.username).lower()
-    )
+    username = fake.user_name()
+    first_name = fake.first_name()
+    last_name = fake.last_name()
+    email = fake.email()
 
 
 # Create your tests here.
 class UserTest(TestCase):
     def setUp(self):
-        self.user1 = UserFactory()
+        self.user1 = UserFactory(username='badass', email='badass@example.com')
         self.user1.set_password('abc')
         self.user1.save()
         self.profile1 = self.user1.profile
@@ -116,7 +119,54 @@ class UserTest(TestCase):
     # Test 12
     # Check string representation of profile
     def test_string_profile(self):
-        self.assertEqual(str(self.profile1), 'badass')
+        self.assertEqual(str(self.profile1), self.user1.get_full_name())
+
+
+class UserProfileTest(TestCase):
+    def setUp(self):
+        self.user1 = UserFactory()
+        self.user1.set_password('secret')
+        self.user1.save()
+        self.profile1 = self.user1.profile
+        self.client = Client()
+
+    def tearDown(self):
+        User.objects.all().delete()
+
+    def test_user1_profile_view_self(self):
+        self.client.login(
+            username=self.user1.username, password='secret'
+        )
+        response = self.client.get(reverse('profile:detail'))
+        self.assertContains(response, self.user1.email)
+        self.assertContains(response, self.user1.username)
+
+    def test_user1_profile_update_view_self(self):
+        self.client.login(
+            username=self.user1.username, password='secret'
+        )
+        response = self.client.get(reverse('profile:edit'))
+        self.assertContains(response, self.user1.username)
+        self.assertContains(response, self.user1.email)
+
+    def test_user1_profile_update_post_self(self):
+        self.client.login(
+            username=self.user1.username, password='secret'
+        )
+        new_data = {
+            'email': 'new@example.com',
+            'camera': 'Super Nikon',
+            'address': '123 Anywhere Dr',
+            'web_url': 'http://www.example.com',
+            'type_photography': 'existential'
+        }
+        response = self.client.post(
+            reverse('profile:edit'), new_data, follow=True
+        )
+        self.assertEqual(response.status_code, 200)
+        response = self.client.get(reverse('profile:detail'))
+        for key in new_data:
+            self.assertContains(response, new_data[key])
 
 
 class LiveServerSplinterTest(LiveServerTestCase):
@@ -167,10 +217,4 @@ class LiveServerSplinterTest(LiveServerTestCase):
             self.browser.url, '{}{}'.format(
                 self.live_server_url, '/accounts/login/?next=/profile/edit/'
             )
-        )
-
-    def test_simple_login(self):
-        self.login_helper(self.user1.username, 'abc')
-        self.assertEqual(self.browser.url, '{}{}'.format(
-            self.live_server_url, '/profile/')
         )
