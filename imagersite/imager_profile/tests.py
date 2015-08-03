@@ -1,10 +1,9 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from django.test import TestCase
 from django.contrib.staticfiles.testing import LiveServerTestCase
 from django.contrib.auth.models import User
+from django.core.urlresolvers import reverse
+from django.test import Client, TestCase
 
 import factory
 from faker import Faker
@@ -123,52 +122,99 @@ class UserTest(TestCase):
         self.assertEqual(str(self.profile1), self.user1.get_full_name())
 
 
-class LiveServerSplinterTest(LiveServerTestCase):
-
-    @classmethod
-    def setUpClass(cls):
-        super(LiveServerSplinterTest, cls).setUpClass()
-        cls.browser = Browser()
-
-    @classmethod
-    def tearDownClass(cls):
-        cls.browser.quit()
-        super(LiveServerSplinterTest, cls).tearDownClass()
-        sleep(3)
-
+class UserProfileTest(TestCase):
     def setUp(self):
-        self.user1 = UserFactory(
-            username='john',
-            email='john@example.com',
-            first_name='John',
-            last_name='Stephenson'
-        )
-        self.user1.set_password('abc')
+        self.user1 = UserFactory()
+        self.user1.set_password('secret')
         self.user1.save()
+        self.profile1 = self.user1.profile
+        self.client = Client()
 
-    def login_helper(self, username, password):
-        self.browser.visit('{}{}'.format(
-            self.live_server_url, '/accounts/login/')
-        )
+    def tearDown(self):
+        User.objects.all().delete()
 
-        self.browser.fill('username', username)
-        self.browser.fill('password', password)
-        self.browser.find_by_value('Log in').first.click()
+    def test_user1_profile_view_self(self):
+        self.client.login(
+            username=self.user1.username, password='secret'
+        )
+        response = self.client.get(reverse('profile:detail'))
+        # self.assertIn(self.user1.username, response.content)
+        # self.assertIn(self.user1.email, response.content)
+        self.assertContains(response, self.user1.email)
+        self.assertContains(response, self.user1.username)
 
-    def test_non_auth_profile_redirect(self):
-        self.browser.visit('{}{}'.format(self.live_server_url, '/profile'))
-        self.assertEqual(
-            self.browser.url, '{}{}'.format(
-                self.live_server_url, '/accounts/login/?next=/profile/'
-            )
-        )
+    # def test_user1_profile_update_view_self(self):
+    #     self.client.login(
+    #         username=self.user1.username, password='secret'
+    #     )
+    #     response = self.client.get(reverse('profile:edit'))
+    #     self.assertIn(self.user1.username, response.content)
+    #     self.assertIn(self.user1.email, response.content)
 
-    def test_non_auth_edit_profile_redirect(self):
-        self.browser.visit('{}{}'.format(
-            self.live_server_url, '/profile/edit')
-        )
-        self.assertEqual(
-            self.browser.url, '{}{}'.format(
-                self.live_server_url, '/accounts/login/?next=/profile/edit/'
-            )
-        )
+    # def test_user1_profile_update_post_self(self):
+    #     self.client.login(
+    #         username=self.user1.username, password='secret'
+    #     )
+    #     new_data = {
+    #         'email': 'new@example.com',
+    #         'camera': 'Super Nikon',
+    #         'address': '123 Anywhere Dr',
+    #         'web_url': 'http://www.example.com',
+    #         'type_photography': 'existential'
+    #     }
+    #     response = self.client.post(reverse('profile:edit'), **new_data)
+    #     self.assertEqual(response.status_code, 200)
+    #     response = self.client.get(reverse('profile:detail'))
+    #     for key in new_data:
+    #         self.assertIn(new_data[key], response.content)
+
+
+# class LiveServerSplinterTest(LiveServerTestCase):
+
+#     @classmethod
+#     def setUpClass(cls):
+#         super(LiveServerSplinterTest, cls).setUpClass()
+#         cls.browser = Browser()
+
+#     @classmethod
+#     def tearDownClass(cls):
+#         cls.browser.quit()
+#         super(LiveServerSplinterTest, cls).tearDownClass()
+#         sleep(3)
+
+#     def setUp(self):
+#         self.user1 = UserFactory(
+#             username='john',
+#             email='john@example.com',
+#             first_name='John',
+#             last_name='Stephenson'
+#         )
+#         self.user1.set_password('abc')
+#         self.user1.save()
+
+#     def login_helper(self, username, password):
+#         self.browser.visit('{}{}'.format(
+#             self.live_server_url, '/accounts/login/')
+#         )
+
+#         self.browser.fill('username', username)
+#         self.browser.fill('password', password)
+#         self.browser.find_by_value('Log in').first.click()
+
+#     def test_non_auth_profile_redirect(self):
+#         self.browser.visit('{}{}'.format(self.live_server_url, '/profile'))
+#         self.assertEqual(
+#             self.browser.url, '{}{}'.format(
+#                 self.live_server_url, '/accounts/login/?next=/profile/'
+#             )
+#         )
+
+#     def test_non_auth_edit_profile_redirect(self):
+#         self.browser.visit('{}{}'.format(
+#             self.live_server_url, '/profile/edit')
+#         )
+#         self.assertEqual(
+#             self.browser.url, '{}{}'.format(
+#                 self.live_server_url, '/accounts/login/?next=/profile/edit/'
+#             )
+#         )
