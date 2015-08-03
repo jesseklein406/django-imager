@@ -22,13 +22,15 @@ class ImagerProfile(models.Model):
     )
     camera = models.CharField(
         max_length=256,
-        help_text="Enter your favorite camera."
+        help_text="Enter your favorite camera.",
+        blank=True
     )
-    address = models.CharField(max_length=256)
-    web_url = models.URLField()
+    address = models.CharField(max_length=256, blank=True)
+    web_url = models.URLField(blank=True)
     type_photography = models.CharField(
         max_length=256,
-        help_text="What type of photgraphy do your prefer?"
+        help_text="What type of photgraphy do your prefer?",
+        blank=True
     )
 
     objects = models.Manager()
