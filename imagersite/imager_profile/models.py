@@ -1,6 +1,7 @@
 from __future__ import unicode_literals
 
 from django.contrib.auth.models import User
+from django.core.urlresolvers import reverse
 from django.db import models
 from django.utils.encoding import python_2_unicode_compatible
 
@@ -21,13 +22,15 @@ class ImagerProfile(models.Model):
     )
     camera = models.CharField(
         max_length=256,
-        help_text="Enter your favorite camera."
+        help_text="Enter your favorite camera.",
+        blank=True
     )
-    address = models.CharField(max_length=256)
-    web_url = models.URLField()
+    address = models.CharField(max_length=256, blank=True)
+    web_url = models.URLField(blank=True)
     type_photography = models.CharField(
         max_length=256,
-        help_text="What type of photgraphy do your prefer?"
+        help_text="What type of photgraphy do your prefer?",
+        blank=True
     )
 
     objects = models.Manager()
@@ -39,3 +42,6 @@ class ImagerProfile(models.Model):
     @property
     def is_active(self):
         return self.user.is_active
+
+    def get_absolute_url(self):
+        return reverse('profile:detail')
