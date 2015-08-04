@@ -1,33 +1,35 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-from __future__ import unicode_literals
+# from __future__ import unicode_literals
 
-from django.test import TestCase
-from django.contrib.staticfiles.testing import StaticLiveServerTestCase
+from django.contrib.staticfiles.testing import LiveServerTestCase
 from django.contrib.auth.models import User
-from django.test.utils import override_settings
+from django.core.urlresolvers import reverse
+from django.test import Client, TestCase
 
 import factory
-from selenium.webdriver.firefox.webdriver import WebDriver
+from faker import Faker
+from splinter import Browser
 from time import sleep
 
 from .models import ImagerProfile
 
+fake = Faker()
 
-class UserFactory(factory.Factory):
+
+class UserFactory(factory.django.DjangoModelFactory):
+    """Create a fake user."""
     class Meta:
         model = User
 
-    username = 'badass'
-    email = factory.LazyAttribute(
-        lambda a: '{}@example.com'.format(a.username).lower()
-    )
+    username = fake.user_name()
+    first_name = fake.first_name()
+    last_name = fake.last_name()
+    email = fake.email()
 
 
 # Create your tests here.
 class UserTest(TestCase):
     def setUp(self):
-        self.user1 = UserFactory()
+        self.user1 = UserFactory(username='badass', email='badass@example.com')
         self.user1.set_password('abc')
         self.user1.save()
         self.profile1 = self.user1.profile
@@ -117,21 +119,70 @@ class UserTest(TestCase):
     # Test 12
     # Check string representation of profile
     def test_string_profile(self):
-        self.assertEqual(str(self.profile1), 'badass')
+        self.assertEqual(str(self.profile1), self.user1.get_full_name())
 
 
-@override_settings(DEBUG=True)
-class LiveServerTest(StaticLiveServerTestCase):
+class UserProfileTest(TestCase):
+    def setUp(self):
+        self.user1 = UserFactory()
+        self.user1.set_password('secret')
+        self.user1.save()
+        self.profile1 = self.user1.profile
+        self.client = Client()
+
+    def tearDown(self):
+        User.objects.all().delete()
+
+    def test_user1_profile_view_self(self):
+        self.client.login(
+            username=self.user1.username, password='secret'
+        )
+        response = self.client.get(reverse('profile:detail'))
+        self.assertContains(response, self.user1.email)
+        self.assertContains(response, self.user1.username)
+
+    def test_user1_profile_update_view_self(self):
+        self.client.login(
+            username=self.user1.username, password='secret'
+        )
+        response = self.client.get(reverse('profile:edit'))
+        self.assertContains(response, self.user1.username)
+        self.assertContains(response, self.user1.email)
+
+    def test_user1_profile_update_post_self(self):
+        self.client.login(
+            username=self.user1.username, password='secret'
+        )
+        new_data = {
+            'username': self.user1.username,
+            'first_name': '',
+            'last_name': '',
+            'email': 'new@example.com',
+            'camera': 'Super Nikon',
+            'address': '123 Anywhere Dr',
+            'web_url': 'http://www.example.com',
+            'type_photography': 'existential'
+        }
+        response = self.client.post(
+            reverse('profile:edit'), new_data, follow=True
+        )
+        self.assertEqual(response.status_code, 200)
+        response = self.client.get(reverse('profile:detail'))
+        for key in new_data:
+            self.assertContains(response, new_data[key])
+
+
+class LiveServerSplinterTest(LiveServerTestCase):
 
     @classmethod
     def setUpClass(cls):
-        super(LiveServerTest, cls).setUpClass()
-        cls.selenium = WebDriver()
+        super(LiveServerSplinterTest, cls).setUpClass()
+        cls.browser = Browser()
 
     @classmethod
     def tearDownClass(cls):
-        cls.selenium.quit()
-        super(LiveServerTest, cls).tearDownClass()
+        cls.browser.quit()
+        super(LiveServerSplinterTest, cls).tearDownClass()
         sleep(3)
 
     def setUp(self):
@@ -145,18 +196,28 @@ class LiveServerTest(StaticLiveServerTestCase):
         self.user1.save()
 
     def login_helper(self, username, password):
-        self.selenium.get('%s%s' % (self.live_server_url, '/accounts/login/'))
+        self.browser.visit('{}{}'.format(
+            self.live_server_url, '/accounts/login/')
+        )
 
-        username_input = self.selenium.find_element_by_id("id_username")
-        username_input.send_keys(username)
-        password_input = self.selenium.find_element_by_id("id_password")
-        password_input.send_keys(password)
-        self.selenium.find_element_by_xpath('//input[@value="Log in"]').click()
+        self.browser.fill('username', username)
+        self.browser.fill('password', password)
+        self.browser.find_by_value('Log in').first.click()
 
     def test_non_auth_profile_redirect(self):
-        self.selenium.get('{}{}'.format(self.live_server_url, '/profile'))
+        self.browser.visit('{}{}'.format(self.live_server_url, '/profile'))
         self.assertEqual(
-            self.selenium.current_url, '{}{}'.format(
+            self.browser.url, '{}{}'.format(
                 self.live_server_url, '/accounts/login/?next=/profile/'
+            )
+        )
+
+    def test_non_auth_edit_profile_redirect(self):
+        self.browser.visit('{}{}'.format(
+            self.live_server_url, '/profile/edit')
+        )
+        self.assertEqual(
+            self.browser.url, '{}{}'.format(
+                self.live_server_url, '/accounts/login/?next=/profile/edit/'
             )
         )
