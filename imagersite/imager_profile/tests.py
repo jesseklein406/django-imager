@@ -154,6 +154,9 @@ class UserProfileTest(TestCase):
             username=self.user1.username, password='secret'
         )
         new_data = {
+            'username': self.user1.username,
+            'first_name': '',
+            'last_name': '',
             'email': 'new@example.com',
             'camera': 'Super Nikon',
             'address': '123 Anywhere Dr',
