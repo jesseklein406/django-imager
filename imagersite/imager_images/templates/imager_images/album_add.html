@@ -11,7 +11,7 @@
 
 {% block content %}
     <div class="main">
-        <form action="{% url 'album_add' %}" method="get">{% csrf_token %}
+        <form action="{% url 'album_add' %}" method="post">{% csrf_token %}
             <label>Title: <input type="text" name="title"></label>
             <label>Description: <input type="text" name="description"></label>
             <label>Photos: <select name="photos" size="6" multiple="multiple">

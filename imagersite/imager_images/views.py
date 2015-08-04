@@ -2,10 +2,8 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import unicode_literals
-# from django.views.generic.base import TemplateView
-from django.shortcuts import get_object_or_404
+from django.contrib.auth.decorators import login_required
 from django.views.generic import ListView, DetailView
-from django.views.generic.edit import CreateView, UpdateView
 from django.shortcuts import get_object_or_404, render
 from imager_images.models import Photo, Album
 from braces.views import LoginRequiredMixin
@@ -39,6 +37,7 @@ class PhotoView(LoginRequiredMixin, DetailView):
     template_name = 'imager_images/photo.html'
 
 
+@login_required
 def album_create(request):
     if request.POST:
         album = Album(
@@ -49,9 +48,9 @@ def album_create(request):
             cover=Photo.objects.get(id=int(request.POST['cover']))
         )
         album.save()
-        for i in request.POST['photos']:
+        for i in request.POST.getlist('photos'):
             album.photos.add(Photo.objects.get(id=int(i)))
-            album.save()
+        album.save()
 
         return HttpResponseRedirect(reverse('library'))
 
@@ -59,16 +58,57 @@ def album_create(request):
         return render(request, 'imager_images/album_add.html')
 
 
-class AlbumUpdate(LoginRequiredMixin, UpdateView):
-    model = Album
-    fields = ['name']
+@login_required
+def album_update(request, pk):
+    album = Album.objects.get(id=pk)
+    if request.POST and (
+        request.user == album.user or album.published == 'public'
+    ):
+        album.title = request.POST['title']
+        album.description = request.POST['description']
+        album.published = request.POST['published']
+        album.cover = Photo.objects.get(id=int(request.POST['cover']))
+        album.photos.clear()
+        for i in request.POST.getlist('photos'):
+            album.photos.add(Photo.objects.get(id=int(i)))
+        album.save()
+
+        return HttpResponseRedirect(reverse('library'))
+
+    else:
+        return render(request, 'imager_images/album_edit.html', {'album': album})
 
 
-class PhotoCreate(LoginRequiredMixin, CreateView):
-    model = Photo
-    fields = ['name']
+@login_required
+def photo_create(request):
+    if request.POST:
+        photo = Photo(
+            user=request.user,
+            title=request.POST['title'],
+            description=request.POST['description'],
+            published=request.POST['published'],
+            photo=request.FILES['photo']
+        )
+        photo.save()
+
+        return HttpResponseRedirect(reverse('library'))
+
+    else:
+        return render(request, 'imager_images/photo_add.html')
 
 
-class PhotoUpdate(LoginRequiredMixin, UpdateView):
-    model = Photo
-    fields = ['name']
+@login_required
+def photo_update(request, pk):
+    photo = Photo.objects.get(id=pk)
+    if request.POST and (
+        request.user == photo.user or photo.published == 'public'
+    ):
+        photo.title = request.POST['title']
+        photo.description = request.POST['description']
+        photo.published = request.POST['published']
+        photo.save()
+
+        return HttpResponseRedirect(reverse('library'))
+
+    else:
+        return render(request, 'imager_images/photo_edit.html', {'photo': photo})

@@ -12,6 +12,12 @@
 
 {% block content %}
     <div class="main">
+        <a href="{% url 'album_add' %}">
+            <button>Add new album</button>
+        </a>
+        <a href="{% url 'photo_add' %}">
+            <button>Add new photo</button>
+        </a>
         <div class="albums">
             <h3>Albums:</h3>
             <div class="row">
@@ -27,6 +33,9 @@
                         {% endif %}
                     </a>
                     <p>{{ album.title }}</p>
+                    <a href="{% url 'album_edit' pk=album.id %}">
+                        <button>Edit</button>
+                    </a>
                 </div>
             {% if forloop.counter|divisibleby:4 %}
             </div>
@@ -46,6 +55,9 @@
                         {% endthumbnail %}
                     </a>
                     <p>{{ photo.title }}</p>
+                    <a href="{% url 'photo_edit' pk=photo.id %}">
+                        <button>Edit</button>
+                    </a>
                 </div>
             {% if forloop.counter|divisibleby:4 %}
             </div>

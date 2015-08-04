@@ -26,15 +26,19 @@ def authorized_photos(photos, user):
 
 @register.filter
 def album_is_authorized(album, user):
-    # return album in Album.objects.filter(
-    #     Q(user=user) | Q(published='shared') | Q(published='public')
-    # ).all()
     return album.published in ['shared', 'public'] or album.user.id == user.id
 
 
 @register.filter
 def photo_is_authorized(photo, user):
-    # return photo in Photo.objects.filter(
-    #     Q(user=user) | Q(published='shared') | Q(published='public')
-    # ).all()
     return photo.published in ['shared', 'public'] or photo.user.id == user.id
+
+
+@register.filter
+def album_is_editable(album, user):
+    return album.published == 'public' or album.user.id == user.id
+
+
+@register.filter
+def photo_is_editable(photo, user):
+    return photo.published == 'public' or photo.user.id == user.id

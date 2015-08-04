@@ -1,5 +1,4 @@
 {% extends "base.html" %}
-{% load images_filters %}
 
 {% block nav %}
 <nav id="navbar-collapse" class="collapse u-pull-left">
@@ -11,21 +10,18 @@
 {% endblock %}
 
 {% block content %}
-    {% if photo|photo_is_editable:user %}
     <div class="main">
-        <form action="{% url 'photo_edit' pk=photo.id %}" method="post">{% csrf_token %}
+        <form action="{% url 'photo_add' %}" method="post" enctype="multipart/form-data">{% csrf_token %}
             <label>Title: <input type="text" name="title"></label>
             <label>Description: <input type="text" name="description"></label>
+            <label>Photo: <input type="file" name="photo"></label>
             <label>Published: <select name="published">
                 <option value="private">Private</option>
                 <option value="shared">Shared</option>
                 <option value="public">Public</option>
                 </select>
             </label>
-            <input type="submit" name="photoedit" value="Submit">
+            <input type="submit" name="photoadd" value="Submit">
         </form>
     </div>
-    {% else %}
-    <p>Not found</p>
-    {% endif %}
 {% endblock %}

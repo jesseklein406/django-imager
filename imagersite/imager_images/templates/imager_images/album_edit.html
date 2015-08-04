@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load images_filters %}
 
 {% block nav %}
 <nav id="navbar-collapse" class="collapse u-pull-left">
@@ -10,9 +11,9 @@
 {% endblock %}
 
 {% block content %}
-    {% if album|album_is_authorized:user %}
+    {% if album|album_is_editable:user %}
     <div class="main">
-        <form action="{% url 'album_edit' %}" method="post">{% csrf_token %}
+        <form action="{% url 'album_edit' pk=album.id %}" method="post">{% csrf_token %}
             <label>Title: <input type="text" name="title"></label>
             <label>Description: <input type="text" name="description"></label>
             <label>Photos: <select name="photos" size="6" multiple="multiple">
@@ -37,6 +38,6 @@
         </form>
     </div>
     {% else %}
-    <p>Permission denied</p>
+    <p>Not found</p>
     {% endif %}
 {% endblock %}
