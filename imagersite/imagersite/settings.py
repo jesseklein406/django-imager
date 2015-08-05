@@ -26,6 +26,10 @@ TESTING = 'test' in sys.argv
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ['SECRET_KEY']
 
+# AWS Keys
+AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY', None)
+AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID', None)
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', False)
 THUMBNAIL_DEBUG = DEBUG
@@ -124,6 +128,10 @@ STATICFILES_DIRS = (
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media_test' if TESTING else 'media')
 MEDIA_TEST = os.path.join(BASE_DIR, 'media_test')
+
+# Boto and S3 Storage
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
+AWS_STORAGE_BUCKET_NAME = os.environ.get('AWS_STORAGE_BUCKET_NAME', None)
 
 SITE_ID = 1
 EMAIL_BACKEND = os.environ.get('EMAIL_BACKEND',
