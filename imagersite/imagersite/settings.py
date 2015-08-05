@@ -28,7 +28,7 @@ SECRET_KEY = '=l8!p3)j!gw59j1p+d#vkpp-e!8smm%4_=y_6&k1=0o5qd53b^'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-THUMBNAIL_DEBUG = True
+THUMBNAIL_DEBUG = DEBUG
 
 ALLOWED_HOSTS = []
 
