@@ -24,7 +24,7 @@ TESTING = 'test' in sys.argv
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '=l8!p3)j!gw59j1p+d#vkpp-e!8smm%4_=y_6&k1=0o5qd53b^'
+SECRET_KEY = os.environ['SECRET_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
