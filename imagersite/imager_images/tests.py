@@ -7,7 +7,7 @@ from django.test import TestCase
 import factory
 from faker import Faker
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
-from selenium.webdriver.firefox.webdriver import WebDriver
+from splinter import Browser
 from django.test.utils import override_settings
 from .models import Album, Photo
 from time import sleep
@@ -138,11 +138,11 @@ class LiveServerTest(StaticLiveServerTestCase):
     @classmethod
     def setUpClass(cls):
         super(LiveServerTest, cls).setUpClass()
-        cls.selenium = WebDriver()
+        cls.browser = Browser()
 
     @classmethod
     def tearDownClass(cls):
-        cls.selenium.quit()
+        cls.browser.quit()
         super(LiveServerTest, cls).tearDownClass()
         sleep(3)
 
@@ -160,17 +160,15 @@ class LiveServerTest(StaticLiveServerTestCase):
         pic.save()
 
     def login_helper(self, username, password):
-        self.selenium.get('%s%s' % (self.live_server_url, '/accounts/login/'))
+        self.browser.visit('%s%s' % (self.live_server_url, '/accounts/login/'))
 
-        username_input = self.selenium.find_element_by_id("id_username")
-        username_input.send_keys(username)
-        password_input = self.selenium.find_element_by_id("id_password")
-        password_input.send_keys(password)
-        self.selenium.find_element_by_xpath('//input[@value="Log in"]').click()
+        self.browser.fill('username', username)
+        self.browser.fill('password', password)
+        self.browser.find_by_value('Log in').first.click()
 
     def test_library(self):
         self.login_helper(self.user1.username, 'secret')
-        self.selenium.get('%s%s' % (self.live_server_url, '/images/library/'))
-        images = self.selenium.find_elements_by_tag_name('img')
+        self.browser.visit('%s%s' % (self.live_server_url, '/images/library/'))
+        images = self.browser.find_by_tag('img')
         # import pdb; pdb.set_trace()
         self.assertEqual(len(images), 11)
