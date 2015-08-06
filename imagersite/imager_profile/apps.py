@@ -6,4 +6,4 @@ class ImagerProfileConfig(AppConfig):
     verbose_name = 'Imager Profile'
 
     def ready(self):
-        import imager_profile.signals
+        import imager_profile.handlers
