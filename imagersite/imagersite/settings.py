@@ -46,6 +46,7 @@ INSTALLED_APPS = (
     'imager_profile',
     'imager_images',
     'sorl.thumbnail',
+    'storages'
 )
 
 ACCOUNT_ACTIVATION_DAYS = 7
@@ -112,18 +113,32 @@ USE_L10N = True
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/1.8/howto/static-files/
-STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, "imagersite/static"),
-)
+# # Static files (CSS, JavaScript, Images)
+# # https://docs.djangoproject.com/en/1.8/howto/static-files/
+# STATIC_URL = '/static/'
+# STATIC_ROOT = os.environ.get('STATIC_ROOT', os.path.join(BASE_DIR, 'static'))
+# STATICFILES_DIRS = (
+#     os.path.join(BASE_DIR, "imagersite/static"),
+# )
 
-# Media file handling
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media_test' if TESTING else 'media')
-MEDIA_TEST = os.path.join(BASE_DIR, 'media_test')
+# # Media file handling
+# MEDIA_URL = '/media/'
+# MEDIA_ROOT = os.path.join(BASE_DIR, 'media_test' if TESTING else 'media')
+# MEDIA_TEST = os.path.join(BASE_DIR, 'media_test')
+
+# Boto and S3 Storage
+# DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
+# AWS_STORAGE_BUCKET_NAME = os.environ.get('AWS_STORAGE_BUCKET_NAME', None)
+DEFAULT_FILE_STORAGE = 'imagersite.s3utils.MediaS3BotoStorage'
+STATICFILES_STORAGE = 'imagersite.s3utils.StaticS3BotoStorage'
+AWS_STORAGE_BUCKET_NAME = os.environ.get('AWS_STORAGE_BUCKET_NAME', None)
+
+S3_URL = 'http://{}.s3.amazonaws.com/'.format(AWS_STORAGE_BUCKET_NAME)
+
+STATIC_DIRECTORY = '/static/'
+MEDIA_DIRECTORY = '/media/'
+STATIC_URL = S3_URL + STATIC_DIRECTORY
+MEDIA_URL = S3_URL + MEDIA_DIRECTORY
 
 SITE_ID = 1
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
