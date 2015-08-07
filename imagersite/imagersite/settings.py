@@ -120,7 +120,7 @@ USE_TZ = True
 DEFAULT_FILE_STORAGE = 'imagersite.s3utils.MediaS3BotoStorage'
 STATICFILES_STORAGE = 'imagersite.s3utils.StaticS3BotoStorage'
 AWS_STORAGE_BUCKET_NAME = os.environ.get('AWS_STORAGE_BUCKET_NAME', None)
-AWS_S3_CUSTOM_DOMAIN = '{}.s3.amazonaws.com'.formt(AWS_STORAGE_BUCKET_NAME)
+AWS_S3_CUSTOM_DOMAIN = '{}.s3.amazonaws.com'.format(AWS_STORAGE_BUCKET_NAME)
 AWS_HEADERS = {
     'Expires': 'Thu, 31 Dec 2099 20:00:00 GMT',
     'Cache-Control': 'max-age=94608000',
