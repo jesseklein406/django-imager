@@ -26,9 +26,6 @@ TESTING = 'test' in sys.argv
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ['SECRET_KEY']
 
-# AWS Keys
-AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY', None)
-AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID', None)
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', False)
@@ -102,7 +99,6 @@ DATABASES = {
     )
 }
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/1.8/topics/i18n/
 
@@ -116,6 +112,10 @@ USE_L10N = True
 
 USE_TZ = True
 
+# AWS Keys
+AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY', None)
+AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID', None)
+
 # Boto and S3 Storage
 DEFAULT_FILE_STORAGE = 'imagersite.s3utils.MediaS3BotoStorage'
 STATICFILES_STORAGE = 'imagersite.s3utils.StaticS3BotoStorage'
@@ -128,6 +128,9 @@ AWS_HEADERS = {
 
 # # Static files (CSS, JavaScript, Images)
 # STATIC_ROOT = os.environ.get('STATIC_ROOT', os.path.join(BASE_DIR, 'static'))
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'imagersite', 'static')
+]
 STATIC_DIRECTORY = 'static'
 STATIC_URL = "https://{}/{}/".format(AWS_S3_CUSTOM_DOMAIN, STATIC_DIRECTORY)
 
