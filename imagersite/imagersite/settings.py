@@ -116,44 +116,26 @@ USE_L10N = True
 
 USE_TZ = True
 
-
-# # Static files (CSS, JavaScript, Images)
-# # https://docs.djangoproject.com/en/1.8/howto/static-files/
-# STATIC_URL = '/static/'
-# STATIC_ROOT = os.environ.get('STATIC_ROOT', os.path.join(BASE_DIR, 'static'))
-# STATICFILES_DIRS = (
-#     os.path.join(BASE_DIR, "imagersite/static"),
-# )
-
-# # Media file handling
-# MEDIA_URL = '/media/'
-# MEDIA_ROOT = os.path.join(BASE_DIR, 'media_test' if TESTING else 'media')
-# MEDIA_TEST = os.path.join(BASE_DIR, 'media_test')
-
 # Boto and S3 Storage
-# DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
-# AWS_STORAGE_BUCKET_NAME = os.environ.get('AWS_STORAGE_BUCKET_NAME', None)
 DEFAULT_FILE_STORAGE = 'imagersite.s3utils.MediaS3BotoStorage'
 STATICFILES_STORAGE = 'imagersite.s3utils.StaticS3BotoStorage'
 AWS_STORAGE_BUCKET_NAME = os.environ.get('AWS_STORAGE_BUCKET_NAME', None)
 AWS_S3_CUSTOM_DOMAIN = '{}.s3.amazonaws.com'.formt(AWS_STORAGE_BUCKET_NAME)
-
 AWS_HEADERS = {
     'Expires': 'Thu, 31 Dec 2099 20:00:00 GMT',
     'Cache-Control': 'max-age=94608000',
 }
 
+# # Static files (CSS, JavaScript, Images)
+# STATIC_ROOT = os.environ.get('STATIC_ROOT', os.path.join(BASE_DIR, 'static'))
+STATIC_DIRECTORY = 'static'
+STATIC_URL = "https://{}/{}/".format(AWS_S3_CUSTOM_DOMAIN + STATIC_DIRECTORY)
 
-S3_URL = 'http://{}.s3.amazonaws.com/'.format(AWS_STORAGE_BUCKET_NAME)
-
-STATIC_DIRECTORY = '/static/'
-MEDIA_DIRECTORY = '/media/'
-STATIC_URL = S3_URL + STATIC_DIRECTORY
-MEDIA_URL = S3_URL + MEDIA_DIRECTORY
-
-# # Boto and S3 Storage
-# DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
-# AWS_STORAGE_BUCKET_NAME = os.environ.get('AWS_STORAGE_BUCKET_NAME', None)
+# # Media file handling
+# MEDIA_ROOT = os.path.join(BASE_DIR, 'media_test' if TESTING else 'media')
+# MEDIA_TEST = os.path.join(BASE_DIR, 'media_test')
+MEDIA_DIRECTORY = 'media'
+MEDIA_URL = "https://{}/{}/".format(AWS_S3_CUSTOM_DOMAIN + MEDIA_DIRECTORY)
 
 SITE_ID = 1
 EMAIL_BACKEND = os.environ.get('EMAIL_BACKEND',
