@@ -144,9 +144,9 @@ MEDIA_DIRECTORY = '/media/'
 STATIC_URL = S3_URL + STATIC_DIRECTORY
 MEDIA_URL = S3_URL + MEDIA_DIRECTORY
 
-# Boto and S3 Storage
-DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
-AWS_STORAGE_BUCKET_NAME = os.environ.get('AWS_STORAGE_BUCKET_NAME', None)
+# # Boto and S3 Storage
+# DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
+# AWS_STORAGE_BUCKET_NAME = os.environ.get('AWS_STORAGE_BUCKET_NAME', None)
 
 SITE_ID = 1
 EMAIL_BACKEND = os.environ.get('EMAIL_BACKEND',
