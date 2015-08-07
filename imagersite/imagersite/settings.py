@@ -129,13 +129,13 @@ AWS_HEADERS = {
 # # Static files (CSS, JavaScript, Images)
 # STATIC_ROOT = os.environ.get('STATIC_ROOT', os.path.join(BASE_DIR, 'static'))
 STATIC_DIRECTORY = 'static'
-STATIC_URL = "https://{}/{}/".format(AWS_S3_CUSTOM_DOMAIN + STATIC_DIRECTORY)
+STATIC_URL = "https://{}/{}/".format(AWS_S3_CUSTOM_DOMAIN, STATIC_DIRECTORY)
 
 # # Media file handling
 # MEDIA_ROOT = os.path.join(BASE_DIR, 'media_test' if TESTING else 'media')
 # MEDIA_TEST = os.path.join(BASE_DIR, 'media_test')
 MEDIA_DIRECTORY = 'media'
-MEDIA_URL = "https://{}/{}/".format(AWS_S3_CUSTOM_DOMAIN + MEDIA_DIRECTORY)
+MEDIA_URL = "https://{}/{}/".format(AWS_S3_CUSTOM_DOMAIN, MEDIA_DIRECTORY)
 
 SITE_ID = 1
 EMAIL_BACKEND = os.environ.get('EMAIL_BACKEND',
