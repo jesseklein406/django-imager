@@ -143,8 +143,8 @@ class FaceEditView(LoginRequiredMixin, TemplateView):
 
     def post(self, request, *args, **kwargs):
         try:
-            face = Face.objects.get(id=request.POST['id'])
-            face.name = request.POST['name']
+            face = Face.objects.get(id=request.POST.get('id'))
+            face.name = request.POST.get('name')
             face.save()
         except (TypeError, Photo.DoesNotExist, Face.DoesNotExist):
             pass
