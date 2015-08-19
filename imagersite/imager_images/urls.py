@@ -10,7 +10,8 @@ from imager_images.views import (
     album_create,
     album_update,
     photo_create,
-    photo_update
+    PhotoUpdateView
+    # photo_update
 )
 
 
@@ -22,5 +23,6 @@ urlpatterns = patterns(
     url(r'^album/add/$', album_create, name='album_add'),
     url(r'^album/edit/(?P<pk>\d+)/$', album_update, name='album_edit'),
     url(r'^photos/add/$', photo_create, name='photo_add'),
-    url(r'^photos/edit/(?P<pk>\d+)/$', photo_update, name='photo_edit'),
+    url(r'^photos/edit/(?P<pk>\d+)/$', PhotoUpdateView.as_view(), name='photo_edit'),
+    # url(r'^photos/edit/(?P<pk>\d+)/$', photo_update, name='photo_edit'),
 )

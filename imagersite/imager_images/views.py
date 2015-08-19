@@ -1,14 +1,15 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 from __future__ import unicode_literals
+
 from django.contrib.auth.decorators import login_required
-from django.views.generic import ListView, DetailView
-from django.shortcuts import get_object_or_404, render
-from imager_images.models import Photo, Album
-from braces.views import LoginRequiredMixin
-from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
+from django.http import HttpResponseRedirect
+from django.shortcuts import get_object_or_404, render
+from django.views.generic import ListView, DetailView, UpdateView
+from braces.views import LoginRequiredMixin
+
+from imager_images.models import Photo, Album
 
 
 class LibraryView(LoginRequiredMixin, ListView):
@@ -97,18 +98,24 @@ def photo_create(request):
         return render(request, 'imager_images/photo_add.html')
 
 
-@login_required
-def photo_update(request, pk):
-    photo = Photo.objects.get(id=pk)
-    if request.POST and (
-        request.user == photo.user or photo.published == 'public'
-    ):
-        photo.title = request.POST['title']
-        photo.description = request.POST['description']
-        photo.published = request.POST['published']
-        photo.save()
+# @login_required
+# def photo_update(request, pk):
+#     photo = Photo.objects.get(id=pk)
+#     if request.POST and (
+#         request.user == photo.user or photo.published == 'public'
+#     ):
+#         photo.title = request.POST['title']
+#         photo.description = request.POST['description']
+#         photo.published = request.POST['published']
+#         photo.save()
 
-        return HttpResponseRedirect(reverse('library'))
+#         return HttpResponseRedirect(reverse('library'))
 
-    else:
-        return render(request, 'imager_images/photo_edit.html', {'photo': photo})
+#     else:
+#         return render(request, 'imager_images/photo_edit.html', {'photo': photo})
+
+class PhotoUpdateView(UpdateView):
+    template_name_suffix = '_edit'
+    model = Photo
+    fields = ['title', 'description', 'published']
+    success_url = 'images/library'

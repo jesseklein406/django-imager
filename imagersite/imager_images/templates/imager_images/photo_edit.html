@@ -26,4 +26,8 @@
     <textarea name="description" id="photo_description" placeholder="Tell us the story. . ." class="u-full-width"></textarea>
     <input type="submit" class="button-primary" name="photoedit" value="Submit">
   </form>
+  <form action="" method="post">{% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Update" />
+  </form>
 {% endblock %}
