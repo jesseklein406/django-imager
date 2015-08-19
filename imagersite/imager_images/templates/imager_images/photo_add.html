@@ -7,15 +7,28 @@
 
 {% block content %}
   <form action="{% url 'photo_add' %}" method="post" enctype="multipart/form-data">{% csrf_token %}
-    <label>Title:<input type="text" name="title"></label>
-    <label>Description: <input type="text" name="description"></label>
-    <label>Photo: <input type="file" name="photo"></label>
-    <label>Published: <select name="published">
-      <option value="private">Private</option>
-      <option value="shared">Shared</option>
-      <option value="public">Public</option>
-      </select>
-    </label>
-    <input type="submit" name="photoadd" value="Submit">
+    <div class="row">
+      <div class="nine columns">
+        <label for="photo_title">Title</label>
+        <input type="text" class="u-full-width" id="photo_title" name="title" placeholder="What's in a name. . ."/>
+      </div><!-- end column -->
+      <div class="three columns">
+        <label>Visibility</label>
+        <select name="published">
+          <option value="private">Private</option>
+          <option value="shared">Shared</option>
+          <option value="public">Public</option>
+        </select>
+      </div><!-- end column -->
+    </div><!-- end row -->
+    <label for="photo_description">Description</label>
+    <textarea name="description" id="photo_description" placeholder="Tell us the story. . ." class="u-full-width"></textarea>
+    <div class="row">
+      <div class="six columns">
+        <label>Photo</label>
+        <input type="file" name="photo">
+      </div><!-- end column -->
+    </div><!-- end row -->
+    <input type="submit" class="button-primary" name="photoadd" value="Submit">
   </form>
 {% endblock %}
