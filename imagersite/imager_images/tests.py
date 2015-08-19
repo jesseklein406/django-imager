@@ -134,6 +134,52 @@ class AlbumTestCase(TestCase):
         self.assertEqual(Album.objects.count(), 0)
 
 
+@override_settings(DEBUG=True)
+class LiveServerTest(StaticLiveServerTestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        super(LiveServerTest, cls).setUpClass()
+        cls.browser = Browser()
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.browser.quit()
+        super(LiveServerTest, cls).tearDownClass()
+        sleep(3)
+
+    def setUp(self):
+        self.user1 = UserFactory()
+        self.user1.set_password('secret')
+        self.user1.save()
+        self.album1 = AlbumFactory(user=self.user1)
+        for i in range(10):
+            pic = PhotoFactory(user=self.user1)
+            self.album1.photos.add(pic)
+            pic.save()
+        self.album1.save()
+        pic.save()
+
+    def login_helper(self, username, password):
+        self.browser.visit('%s%s' % (self.live_server_url, '/accounts/login/'))
+
+        self.browser.fill('username', username)
+        self.browser.fill('password', password)
+        self.browser.find_by_value('Log in').first.click()
+
+    def test_library_view(self):
+        self.login_helper(self.user1.username, 'secret')
+        self.browser.visit('%s%s' % (self.live_server_url, '/images/library/'))
+        images = self.browser.find_by_tag('img')
+        self.assertEqual(len(images), 11)
+
+
+"""The following tests were completed with reference to the work of Nick Draper
+and Megan Slater. Original found at:
+https://github.com/ndraper2/django-imager/blob/master/imagersite/imager_images/tests.py
+"""
+
+
 class LibraryViewTestCase(TestCase):
     def setUp(self):
         user1 = UserFactory.create(username='alice')
@@ -174,41 +220,166 @@ class LibraryViewTestCase(TestCase):
         self.assertContains(response, 'input type="submit" value="Log in"')
 
 
-@override_settings(DEBUG=True)
-class LiveServerTest(StaticLiveServerTestCase):
-
-    @classmethod
-    def setUpClass(cls):
-        super(LiveServerTest, cls).setUpClass()
-        cls.browser = Browser()
-
-    @classmethod
-    def tearDownClass(cls):
-        cls.browser.quit()
-        super(LiveServerTest, cls).tearDownClass()
-        sleep(3)
-
+class PhotoAddTestCase(TestCase):
     def setUp(self):
-        self.user1 = UserFactory()
-        self.user1.set_password('secret')
-        self.user1.save()
-        self.album1 = AlbumFactory(user=self.user1)
-        for i in range(10):
-            pic = PhotoFactory(user=self.user1)
-            self.album1.photos.add(pic)
-            pic.save()
-        self.album1.save()
+        user = UserFactory.create(username='alice')
+        user.set_password('secret')
+        user.save()
+        pic = PhotoFactory.create(user=user)
         pic.save()
+        album = AlbumFactory.create(user=user)
+        album.save()
+        album.photos.add(pic)
 
-    def login_helper(self, username, password):
-        self.browser.visit('%s%s' % (self.live_server_url, '/accounts/login/'))
+    def test_add_photo(self):
+        client = Client()
+        client.login(username='alice', password='secret')
+        with open('imagersite/static/images/django_thumb.jpg', 'rb') as fh:
+            response = client.post(
+                '/images/photos/add/',
+                {'file': fh, 'title': 'test title', 'published': 'private'},
+                follow=True
+            )
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'test title')
 
-        self.browser.fill('username', username)
-        self.browser.fill('password', password)
-        self.browser.find_by_value('Log in').first.click()
+    def test_photo_add_unauthenticated(self):
+        client = Client()
+        response = client.get('/images/photos/add', follow=True)
+        self.assertEqual(len(response.redirect_chain), 2)
+        self.assertContains(response, 'input type="submit" value="Log in"')
 
-    def test_library_view(self):
-        self.login_helper(self.user1.username, 'secret')
-        self.browser.visit('%s%s' % (self.live_server_url, '/images/library/'))
-        images = self.browser.find_by_tag('img')
-        self.assertEqual(len(images), 11)
+
+class PhotoEditTestCase(TestCase):
+    def setUp(self):
+        user = UserFactory.create(username='alice')
+        user.set_password('secret')
+        user.save()
+        user2 = UserFactory.create(username='bob')
+        user2.set_password('secret')
+        user2.save()
+        photo = PhotoFactory.create(user=user)
+        photo.save()
+
+    def test_edit_photo(self):
+        client = Client()
+        client.login(username='alice', password='secret')
+        photo = Photo.objects.all()[0]
+        response = client.get('/images/photos/{}/edit/'.format(photo.id))
+        self.assertContains(response, photo.title[:20])
+        with open('imagersite/static/images/django_thumb.jpg', 'rb') as fh:
+            response = client.post(
+                '/images/photos/{}/edit/'.format(photo.id),
+                {
+                    'file': fh,
+                    'title': 'new test title',
+                    'published': 'private'
+                },
+                follow=True
+            )
+        self.assertContains(response, 'new test title')
+        response = client.get('/images/photos/{}/'.format(photo.id))
+        self.assertContains(response, 'new test title')
+
+    def test_edit_other_user(self):
+        # what you end up with is a create form for yourself.
+        client = Client()
+        client.login(username='bob', password='secret')
+        photo = Photo.objects.all()[0]
+        with open('imagersite/static/images/django_thumb.jpg', 'rb') as fh:
+            response = client.post(
+                '/images/photos/{}/edit/'.format(photo.id),
+                {
+                    'file': fh,
+                    'title': 'other user',
+                    'published': 'private'
+                },
+                follow=True
+            )
+        self.assertEqual(response.status_code, 404)
+        # alice = User.objects.get(username='alice')
+        # self.assertEqual(photo.user, alice)
+        # self.assertNotIn(photo.title, 'other user')
+
+    def test_photo_edit_unauthenticated(self):
+        client = Client()
+        photo = Photo.objects.all()[0]
+        response = client.get(
+            '/images/photos/{}/edit/'.format(photo.id), follow=True
+        )
+        self.assertEqual(len(response.redirect_chain), 1)
+        self.assertContains(response, 'input type="submit" value="Log in"')
+
+
+class AlbumAddTestCase(TestCase):
+    def setUp(self):
+        user = UserFactory.create(username='alice')
+        user.set_password('secret')
+        user.save()
+        user2 = UserFactory.create(username='bob')
+        user2.set_password('secret')
+        user2.save()
+        photo = PhotoFactory.create(user=user)
+        photo.save()
+
+    def test_add_album(self):
+        client = Client()
+        client.login(username='alice', password='secret')
+        photo = Photo.objects.all()[0]
+        response = client.post(
+            '/images/album/add/',
+            {
+                'title': 'new album title',
+                'photos': photo.id,
+                'published': 'private',
+            },
+            follow=True
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'new album title')
+        album = Album.objects.all()[0]
+        self.assertIn(photo, album.photos.all())
+
+    def test_album_add_unauthenticated(self):
+        client = Client()
+        response = client.get('/images/album/add/', follow=True)
+        self.assertEqual(len(response.redirect_chain), 1)
+        self.assertContains(response, 'input type="submit" value="Log in"')
+
+
+class AlbumEditTestCase(TestCase):
+    def setUp(self):
+        user = UserFactory.create(username='alice')
+        user.set_password('secret')
+        user.save()
+        user2 = UserFactory.create(username='bob')
+        user2.set_password('secret')
+        user2.save()
+        pic = PhotoFactory.create(user=user)
+        pic.save()
+        album = AlbumFactory.create(user=user)
+        album.save()
+        album.photos.add(pic)
+
+    def test_edit_other_user(self):
+        client = Client()
+        client.login(username='bob', password='secret')
+        album = Album.objects.all()[0]
+        response = client.post(
+            '/images/album/{}/edit/'.format(album.id),
+            {
+                'title': 'other user',
+                'published': 'private'
+            },
+            follow=True
+        )
+        self.assertEqual(response.status_code, 404)
+
+    def test_album_edit_unauthenticated(self):
+        client = Client()
+        album = Album.objects.all()[0]
+        response = client.get(
+            '/images/album/{}/edit/'.format(album.id), follow=True
+        )
+        self.assertEqual(len(response.redirect_chain), 1)
+        self.assertContains(response, 'input type="submit" value="Log in"')

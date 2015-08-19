@@ -63,6 +63,12 @@ class AlbumUpdateView(LoginRequiredMixin, UpdateView):
         form.fields['cover'].queryset = form.instance.photos
         return form
 
+    def get_object(self):
+        obj = get_object_or_404(
+            Album, user=self.request.user, pk=self.kwargs['pk']
+        )
+        return obj
+
 
 class PhotoAddView(LoginRequiredMixin, CreateView):
     template_name_suffix = '_add'
@@ -81,3 +87,10 @@ class PhotoUpdateView(LoginRequiredMixin, UpdateView):
     model = Photo
     fields = ['photo', 'title', 'description', 'published']
     success_url = '/images/library'
+
+    def get_object(self):
+        obj = get_object_or_404(
+            Photo, user=self.request.user, pk=self.kwargs['pk']
+        )
+        return obj
+
