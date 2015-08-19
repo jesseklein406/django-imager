@@ -79,5 +79,5 @@ class PhotoAddView(LoginRequiredMixin, CreateView):
 class PhotoUpdateView(LoginRequiredMixin, UpdateView):
     template_name_suffix = '_edit'
     model = Photo
-    fields = ['title', 'description', 'published']
+    fields = ['photo', 'title', 'description', 'published']
     success_url = '/images/library'
