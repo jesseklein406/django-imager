@@ -80,6 +80,13 @@ def album_update(request, pk):
         return render(request, 'imager_images/album_edit.html', {'album': album})
 
 
+class AlbumUpdateView(LoginRequiredMixin, UpdateView):
+    template_name_suffix = '_edit'
+    model = Photo
+    fields = ['title', 'description', 'published', 'cover', 'photos']
+    success_url = '/images/library'
+
+
 @login_required
 def photo_create(request):
     if request.POST:
@@ -97,22 +104,6 @@ def photo_create(request):
     else:
         return render(request, 'imager_images/photo_add.html')
 
-
-# @login_required
-# def photo_update(request, pk):
-#     photo = Photo.objects.get(id=pk)
-#     if request.POST and (
-#         request.user == photo.user or photo.published == 'public'
-#     ):
-#         photo.title = request.POST['title']
-#         photo.description = request.POST['description']
-#         photo.published = request.POST['published']
-#         photo.save()
-
-#         return HttpResponseRedirect(reverse('library'))
-
-#     else:
-#         return render(request, 'imager_images/photo_edit.html', {'photo': photo})
 
 class PhotoUpdateView(LoginRequiredMixin, UpdateView):
     template_name_suffix = '_edit'
