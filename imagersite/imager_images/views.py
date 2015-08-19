@@ -138,7 +138,7 @@ class PhotoUpdateView(LoginRequiredMixin, UpdateView):
         return obj
 
 
-class FaceEditView(TemplateView):
+class FaceEditView(LoginRequiredMixin, TemplateView):
     model = Face
 
     def post(self, request, *args, **kwargs):
