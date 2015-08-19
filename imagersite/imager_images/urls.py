@@ -19,10 +19,10 @@ urlpatterns = patterns(
     url(r'^album/(?P<pk>\d+)/$', AlbumView.as_view(), name='album'),
     url(r'^photos/(?P<pk>\d+)/$', PhotoView.as_view(), name='photo'),
     url(r'^album/add/$', album_create, name='album_add'),
-    url(r'^album/edit/(?P<pk>\d+)/$', album_update, name='album_edit'),
+    url(r'^album/(?P<pk>\d+)/edit/$', album_update, name='album_edit'),
     url(r'^photos/add/$', photo_create, name='photo_add'),
     url(
-        r'^photos/edit/(?P<pk>\d+)/$',
+        r'^photos/(?P<pk>\d+)/edit/$',
         PhotoUpdateView.as_view(),
         name='photo_edit'
     ),
