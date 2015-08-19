@@ -7,7 +7,6 @@ from .views import (
     PhotoView,
     AlbumView,
     AlbumAddView,
-    album_update,
     AlbumUpdateView,
     photo_create,
     PhotoUpdateView

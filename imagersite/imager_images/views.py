@@ -38,7 +38,7 @@ class PhotoView(LoginRequiredMixin, DetailView):
     template_name = 'imager_images/photo.html'
 
 
-class AlbumAddView(CreateView):
+class AlbumAddView(LoginRequiredMixin, CreateView):
     template_name_suffix = '_add'
     model = Album
     fields = ['title', 'description', 'published', 'photos']
@@ -55,27 +55,6 @@ class AlbumAddView(CreateView):
         return super(AlbumAddView, self).form_valid(form)
 
 
-@login_required
-def album_update(request, pk):
-    album = Album.objects.get(id=pk)
-    if request.POST and (
-        request.user == album.user or album.published == 'public'
-    ):
-        album.title = request.POST['title']
-        album.description = request.POST['description']
-        album.published = request.POST['published']
-        album.cover = Photo.objects.get(id=int(request.POST['cover']))
-        album.photos.clear()
-        for i in request.POST.getlist('photos'):
-            album.photos.add(Photo.objects.get(id=int(i)))
-        album.save()
-
-        return HttpResponseRedirect(reverse('library'))
-
-    else:
-        return render(request, 'imager_images/album_edit.html', {'album': album})
-
-
 class AlbumUpdateView(LoginRequiredMixin, UpdateView):
     template_name_suffix = '_edit'
     model = Album
@@ -87,6 +66,18 @@ class AlbumUpdateView(LoginRequiredMixin, UpdateView):
         form.fields['photos'].queryset = self.request.user.photos.all()
         form.fields['cover'].queryset = form.instance.photos
         return form
+
+
+class PhotoAddView(LoginRequiredMixin, CreateView):
+    template_name = 'photo_add.html'
+    model = Photo
+    fields = ['file', 'title', 'description', 'published', 'location']
+    success_url = '/images/library/'
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        form.save()
+        return super(PhotoAddView, self).form_valid(form)
 
 
 @login_required
