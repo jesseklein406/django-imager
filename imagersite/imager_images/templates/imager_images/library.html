@@ -7,52 +7,77 @@
 {% endblock %}
 
 {% block content %}
-<a href="{% url 'album_add' %}"><button>Add new album</button></a>
-<a href="{% url 'photo_add' %}"><button>Add new photo</button></a>
 
-<div class="albums">
-  <h3>Albums:</h3>
+<section class="albums">
+
+  <div class="row">
+    <div class="two columns">
+      <h3>Albums:</h3>
+    </div>
+    <div class="ten columns">
+      <a href="{% url 'album_add' %}"><button class="button-primary u-pull-right">Add new album</button></a>
+    </div>
+  </div>
+  <!-- <hr /> -->
+  
   <div class="row">
     {% for album in media.0 %}
+    
     <div class="three columns">
+      <a href="{% url 'album' pk=album.id %}">{{ album.title|truncatechars:26 }}</a>
       <a href="{% url 'album' pk=album.id %}">
         {% if album.cover %}
-        {% thumbnail album.cover.photo "200" as im %}
-        <img src="{{ im.url }}">
-        {% endthumbnail %}
+        
+          {% thumbnail album.cover.photo "200x200" crop="center" as im %}
+          <img src="{{ im.url }}" alt="{{ album.title }}">
+          {% endthumbnail %}
+        
         {% else %}
-        <img src="{% static 'images/django_thumb.jpg' %}" alt="Django Unchained">
+          <img src="{% static 'images/django_thumb.jpg' %}" alt="Django Unchained">
         {% endif %}
       </a>
-      <p><a href="{% url 'album' pk=album.id %}">{{ album.title }}</a></p>
       <a href="{% url 'album_edit' pk=album.id %}"><button>Edit</button></a>
     </div><!-- end column -->
+    
   {% if forloop.counter|divisibleby:4 %}
   </div><!-- end row -->
   <div class="row">
   {% endif %}
   {% endfor %}
   </div><!-- end row -->
-</div><!-- end albums -->
+  <hr />
+</section><!-- end albums -->
 
-<div class="photos">
-  <h3>Photos:</h3>
+<section class="photos">
+
+  <div class="row">
+    <div class="two columns">
+      <h3>Photos:</h3>
+    </div>
+    <div class="ten columns">
+      <a href="{% url 'photo_add' %}"><button class="button-primary u-pull-right">Add new photo</button></a>
+    </div>
+  </div>
+  <!-- <hr /> -->
+
   <div class="row">
   {% for photo in media.1 %}
     <div class="three columns">
+      <a href="{% url 'photo' pk=photo.id %}">{{ photo.title }}</a>
       <a href="{% url 'photo' pk=photo.id %}">
-        {% thumbnail photo.photo "200" as im %}
-        <img src="{{ im.url }}">
+        {% thumbnail photo.photo "200x200" crop="center" as im %}
+        <img src="{{ im.url }}" alt="{{ photo.title }}">
         {% endthumbnail %}
       </a>
-      <p><a href="{% url 'photo' pk=photo.id %}">{{ photo.title }}</a></p>
       <a href="{% url 'photo_edit' pk=photo.id %}"><button>Edit</button></a>
     </div><!-- end column -->
+    
   {% if forloop.counter|divisibleby:4 %}
   </div><!-- end row -->
   <div class="row">
   {% endif %}
   {% endfor %}
   </div><!-- end row -->
-</div><!-- end photos -->
+  <hr />
+</section><!-- end photos -->
 {% endblock %}
