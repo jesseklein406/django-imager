@@ -1,7 +1,6 @@
 {% extends "base.html" %}
 
 {% block nav_li %}
-<li><a href="{% url 'profile:edit' %}">Edit Profile</a></li>
 <li><a href="{% url 'library' %}">Library</a></li>
 {% endblock %}
 
@@ -22,5 +21,6 @@
       <li>Number of albums: {{ user.albums.count }}</li>
     </ul>
   </div>
+  <a href="{% url 'profile:edit' %}"><button class="button-primary">Edit Profile</button></a>
   {% endif %}
 {% endblock %}
