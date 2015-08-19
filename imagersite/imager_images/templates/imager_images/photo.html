@@ -14,8 +14,8 @@
 
 {% block content %}
   {% if photo|photo_is_authorized:user %}
-  <div id="photo-container">
-    <img src="{{ photo.photo.url }}">
+  <div id="photo-container" class="u-full-width">
+    <img src="{{ photo.photo.url }}" id="image">
   </div>
     <h3>{{ photo.title }}</h3>
     <h4>{{ photo.user }}</h4>
@@ -41,8 +41,8 @@
       container: '#photo-container',
       labelUrl: '{% url "edit_face" object.id %}',
       csrf: '{{ csrf_token }}',
-      originalWidth: {{ object.image.width }},
-      originalHeight: {{ object.image.height }},
+      originalWidth: {{ object.photo.width }},
+      originalHeight: {{ object.photo.height }},
     newWidth: $("#photo-container img").width(),
     newHeight: $("#photo-container img").height()
     });
