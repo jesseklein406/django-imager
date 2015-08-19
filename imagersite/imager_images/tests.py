@@ -1,16 +1,18 @@
 from __future__ import unicode_literals
-from shutil import rmtree
 
 from django.contrib.auth.models import User
 from django.conf import settings
-from django.test import TestCase
+from django.contrib.staticfiles.testing import StaticLiveServerTestCase
+from django.test import Client, TestCase
+from django.test.utils import override_settings
+
 import factory
 from faker import Faker
-from django.contrib.staticfiles.testing import StaticLiveServerTestCase
+from shutil import rmtree
 from splinter import Browser
-from django.test.utils import override_settings
-from .models import Album, Photo
 from time import sleep
+
+from .models import Album, Photo
 
 fake = Faker()
 
@@ -132,6 +134,46 @@ class AlbumTestCase(TestCase):
         self.assertEqual(Album.objects.count(), 0)
 
 
+class LibraryViewTestCase(TestCase):
+    def setUp(self):
+        user1 = UserFactory.create(username='alice')
+        user1.set_password('secret')
+        user1.save()
+        user2 = UserFactory.create(username='bob')
+        user2.set_password('secret')
+        user2.save()
+        pic = PhotoFactory.create(user=user1)
+        pic.save()
+        album = AlbumFactory.create(user=user1)
+        album.save()
+        album.photos.add(pic)
+
+    def test_library_view(self):
+        photo = Photo.objects.all()[0]
+        album = Album.objects.all()[0]
+        client = Client()
+        client.login(username='alice', password='secret')
+        response = client.get('/images/library/')
+        # Check for truncated titles
+        self.assertContains(response, photo.title[:20])
+        self.assertContains(response, album.title[:20])
+
+    def test_library_view_different_user(self):
+        photo = Photo.objects.all()[0]
+        album = Album.objects.all()[0]
+        client = Client()
+        client.login(username='bob', password='secret')
+        response = client.get('/images/library/')
+        self.assertNotContains(response, photo.title[:20])
+        self.assertNotContains(response, album.title[:20])
+
+    def test_library_unauthenticated(self):
+        client = Client()
+        response = client.get('/images/library/', follow=True)
+        self.assertEqual(len(response.redirect_chain), 1)
+        self.assertContains(response, 'input type="submit" value="Log in"')
+
+
 @override_settings(DEBUG=True)
 class LiveServerTest(StaticLiveServerTestCase):
 
@@ -155,7 +197,6 @@ class LiveServerTest(StaticLiveServerTestCase):
             pic = PhotoFactory(user=self.user1)
             self.album1.photos.add(pic)
             pic.save()
-        # self.album1.cover = pic
         self.album1.save()
         pic.save()
 
@@ -166,9 +207,8 @@ class LiveServerTest(StaticLiveServerTestCase):
         self.browser.fill('password', password)
         self.browser.find_by_value('Log in').first.click()
 
-    def test_library(self):
+    def test_library_view(self):
         self.login_helper(self.user1.username, 'secret')
         self.browser.visit('%s%s' % (self.live_server_url, '/images/library/'))
         images = self.browser.find_by_tag('img')
-        # import pdb; pdb.set_trace()
         self.assertEqual(len(images), 11)
