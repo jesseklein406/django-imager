@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 import os
 
 from django.core.urlresolvers import reverse
+from django.db.models import Q
 from django.shortcuts import get_object_or_404
 from django.views.generic import ListView, CreateView, DetailView, UpdateView
 from braces.views import LoginRequiredMixin
@@ -58,6 +59,20 @@ class PhotoView(LoginRequiredMixin, DetailView):
     model = Photo
     context_object_name = 'photo'
     template_name = 'imager_images/photo.html'
+    detect = False
+
+    def get_queryset(self, *args, **kwargs):
+        return super(PhotoView, self).get_queryset(*args, **kwargs).filter(
+            Q(user=self.request.user) | Q(published='public')
+        )
+
+    def get_context_data(self, **kwargs):
+        context = super(DetailView, self).get_context_data(**kwargs)
+        if self.detect and len(self.object.faces.all()) == 0:
+            get_faces(self.object)
+
+        context['faces'] = self.object.faces.all()
+        return context
 
 
 class AlbumAddView(LoginRequiredMixin, CreateView):
