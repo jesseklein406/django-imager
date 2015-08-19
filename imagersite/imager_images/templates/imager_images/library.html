@@ -32,7 +32,7 @@
                         <img src="{% static 'images/django_thumb.jpg' %}" alt="Django Unchained">
                         {% endif %}
                     </a>
-                    <p>{{ album.title }}</p>
+                    <p><a href="{% url 'album' pk=album.id %}">{{ album.title }}</a></p>
                     <a href="{% url 'album_edit' pk=album.id %}">
                         <button>Edit</button>
                     </a>
@@ -54,7 +54,7 @@
                         <img src="{{ im.url }}">
                         {% endthumbnail %}
                     </a>
-                    <p>{{ photo.title }}</p>
+                    <p><a href="{% url 'photo' pk=photo.id %}">{{ photo.title }}</a></p>
                     <a href="{% url 'photo_edit' pk=photo.id %}">
                         <button>Edit</button>
                     </a>
