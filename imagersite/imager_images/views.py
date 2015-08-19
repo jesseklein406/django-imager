@@ -1,15 +1,11 @@
-# -*- coding: utf-8 -*-
-
 from __future__ import unicode_literals
 
-from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
-from django.http import HttpResponseRedirect
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404
 from django.views.generic import ListView, CreateView, DetailView, UpdateView
 from braces.views import LoginRequiredMixin
 
-from imager_images.models import Photo, Album
+from .models import Photo, Album
 
 
 class LibraryView(LoginRequiredMixin, ListView):
@@ -69,33 +65,15 @@ class AlbumUpdateView(LoginRequiredMixin, UpdateView):
 
 
 class PhotoAddView(LoginRequiredMixin, CreateView):
-    template_name = 'photo_add.html'
+    template_name_suffix = '_add'
     model = Photo
-    fields = ['file', 'title', 'description', 'published', 'location']
+    fields = ['photo', 'title', 'description', 'published']
     success_url = '/images/library/'
 
     def form_valid(self, form):
         form.instance.user = self.request.user
         form.save()
         return super(PhotoAddView, self).form_valid(form)
-
-
-@login_required
-def photo_create(request):
-    if request.POST:
-        photo = Photo(
-            user=request.user,
-            title=request.POST['title'],
-            description=request.POST['description'],
-            published=request.POST['published'],
-            photo=request.FILES['photo']
-        )
-        photo.save()
-
-        return HttpResponseRedirect(reverse('library'))
-
-    else:
-        return render(request, 'imager_images/photo_add.html')
 
 
 class PhotoUpdateView(LoginRequiredMixin, UpdateView):

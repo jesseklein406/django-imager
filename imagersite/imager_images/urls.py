@@ -4,11 +4,11 @@ from django.conf.urls import patterns, url
 
 from .views import (
     LibraryView,
+    PhotoAddView,
     PhotoView,
     AlbumView,
     AlbumAddView,
     AlbumUpdateView,
-    photo_create,
     PhotoUpdateView
 )
 
@@ -24,7 +24,7 @@ urlpatterns = patterns(
         AlbumUpdateView.as_view(),
         name='album_edit'
     ),
-    url(r'^photos/add/$', photo_create, name='photo_add'),
+    url(r'^photos/add/$', PhotoAddView.as_view(), name='photo_add'),
     url(
         r'^photos/(?P<pk>\d+)/edit/$',
         PhotoUpdateView.as_view(),

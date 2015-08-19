@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load images_filters %}
 
 {% block nav_li %}
 <li><a href="{% url 'profile:detail' %}">Profile</a></li>
@@ -7,28 +8,30 @@
 
 {% block content %}
   <form action="{% url 'photo_add' %}" method="post" enctype="multipart/form-data">{% csrf_token %}
+    
     <div class="row">
       <div class="nine columns">
-        <label for="photo_title">Title</label>
-        <input type="text" class="u-full-width" id="photo_title" name="title" placeholder="What's in a name. . ."/>
+        <label for="id_title">{{ form.title.label }}</label>
+        {{ form.title|add_class:'u-full-width' }}
       </div><!-- end column -->
+      
       <div class="three columns">
-        <label>Visibility</label>
-        <select name="published">
-          <option value="private">Private</option>
-          <option value="shared">Shared</option>
-          <option value="public">Public</option>
-        </select>
+        <label for="id_published">Visibility</label>
+        {{ form.published }}
       </div><!-- end column -->
     </div><!-- end row -->
-    <label for="photo_description">Description</label>
-    <textarea name="description" id="photo_description" placeholder="Tell us the story. . ." class="u-full-width"></textarea>
+    
+    <label for="id_description">{{ form.description.label }}</label>
+    {{ form.description|add_class:'u-full-width' }}
+    
+    
     <div class="row">
       <div class="six columns">
-        <label>Photo</label>
-        <input type="file" name="photo">
+        <label for="id_photo">{{ form.photo.label }}</label>
+        {{ form.photo }}
       </div><!-- end column -->
     </div><!-- end row -->
+    
     <input type="submit" class="button-primary" name="photoadd" value="Add Photo">
   </form>
 {% endblock %}
