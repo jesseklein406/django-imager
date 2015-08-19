@@ -4,9 +4,9 @@ from __future__ import unicode_literals
 
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
-from django.http import HttpResponseRedirect, Http404
+from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
-from django.views.generic import ListView, DetailView, UpdateView
+from django.views.generic import ListView, CreateView, DetailView, UpdateView
 from braces.views import LoginRequiredMixin
 
 from imager_images.models import Photo, Album
@@ -38,25 +38,21 @@ class PhotoView(LoginRequiredMixin, DetailView):
     template_name = 'imager_images/photo.html'
 
 
-@login_required
-def album_create(request):
-    if request.POST:
-        album = Album(
-            user=request.user,
-            title=request.POST['title'],
-            description=request.POST['description'],
-            published=request.POST['published'],
-            cover=Photo.objects.get(id=int(request.POST['cover']))
-        )
-        album.save()
-        for i in request.POST.getlist('photos'):
-            album.photos.add(Photo.objects.get(id=int(i)))
-        album.save()
+class AlbumAddView(CreateView):
+    template_name_suffix = '_add'
+    model = Album
+    fields = ['title', 'description', 'published', 'photos']
+    success_url = '/images/library/'
 
-        return HttpResponseRedirect(reverse('library'))
+    def get_form(self):
+        form = super(AlbumAddView, self).get_form()
+        form.fields['photos'].queryset = self.request.user.photos.all()
+        return form
 
-    else:
-        return render(request, 'imager_images/album_add.html')
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        form.save()
+        return super(AlbumAddView, self).form_valid(form)
 
 
 @login_required
