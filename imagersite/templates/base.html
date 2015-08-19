@@ -53,6 +53,7 @@
             {% block nav %}
             <nav id="navbar-collapse" class="collapse u-pull-left">
               <ul class="u-cf">
+                {% block nav_li %}
                 {% if user.is_authenticated %}
                 <li><a href="{% url 'profile:detail' %}">Profile</a></li>
                 <li><a href="{% url 'library' %}">Library</a></li>
@@ -60,6 +61,7 @@
                 <li><a href="/">About</a></li>
                 <li><a href="https://github.com/jesseklein406/django-imager" target="_blank">Source</a></li>
                 {% endif %}
+                {% endblock %}
               </ul>
             </nav>
             {% endblock %}

@@ -2,69 +2,57 @@
 {% load thumbnail %}
 {% load staticfiles %}
 
-{% block nav %}
-<nav id="navbar-collapse" class="collapse u-pull-left">
-  <ul class="u-cf">
-    <li><a href="{% url 'profile:detail' %}">Profile</a></li>
-  </ul>
-</nav>
+{% block nav_li %}
+<li><a href="{% url 'profile:detail' %}">Profile</a></li>
 {% endblock %}
 
 {% block content %}
-    <div class="main">
-        <a href="{% url 'album_add' %}">
-            <button>Add new album</button>
-        </a>
-        <a href="{% url 'photo_add' %}">
-            <button>Add new photo</button>
-        </a>
-        <div class="albums">
-            <h3>Albums:</h3>
-            <div class="row">
-                {% for album in media.0 %}
-                <div class="three columns">
-                    <a href="{% url 'album' pk=album.id %}">
-                        {% if album.cover %}
-                        {% thumbnail album.cover.photo "200" as im %}
-                        <img src="{{ im.url }}">
-                        {% endthumbnail %}
-                        {% else %}
-                        <img src="{% static 'images/django_thumb.jpg' %}" alt="Django Unchained">
-                        {% endif %}
-                    </a>
-                    <p><a href="{% url 'album' pk=album.id %}">{{ album.title }}</a></p>
-                    <a href="{% url 'album_edit' pk=album.id %}">
-                        <button>Edit</button>
-                    </a>
-                </div>
-            {% if forloop.counter|divisibleby:4 %}
-            </div>
-            <div class="row">
-            {% endif %}
-            {% endfor %}
-            </div>
-        </div>
-        <div class="photos">
-            <h3>Photos:</h3>
-            <div class="row">
-            {% for photo in media.1 %}
-                <div class="three columns">
-                    <a href="{% url 'photo' pk=photo.id %}">
-                        {% thumbnail photo.photo "200" as im %}
-                        <img src="{{ im.url }}">
-                        {% endthumbnail %}
-                    </a>
-                    <p><a href="{% url 'photo' pk=photo.id %}">{{ photo.title }}</a></p>
-                    <a href="{% url 'photo_edit' pk=photo.id %}">
-                        <button>Edit</button>
-                    </a>
-                </div>
-            {% if forloop.counter|divisibleby:4 %}
-            </div>
-            <div class="row">
-            {% endif %}
-            {% endfor %}
-            </div>
-        </div>
-    </div>
+<a href="{% url 'album_add' %}"><button>Add new album</button></a>
+<a href="{% url 'photo_add' %}"><button>Add new photo</button></a>
+
+<div class="albums">
+  <h3>Albums:</h3>
+  <div class="row">
+    {% for album in media.0 %}
+    <div class="three columns">
+      <a href="{% url 'album' pk=album.id %}">
+        {% if album.cover %}
+        {% thumbnail album.cover.photo "200" as im %}
+        <img src="{{ im.url }}">
+        {% endthumbnail %}
+        {% else %}
+        <img src="{% static 'images/django_thumb.jpg' %}" alt="Django Unchained">
+        {% endif %}
+      </a>
+      <p><a href="{% url 'album' pk=album.id %}">{{ album.title }}</a></p>
+      <a href="{% url 'album_edit' pk=album.id %}"><button>Edit</button></a>
+    </div><!-- end column -->
+  {% if forloop.counter|divisibleby:4 %}
+  </div><!-- end row -->
+  <div class="row">
+  {% endif %}
+  {% endfor %}
+  </div><!-- end row -->
+</div><!-- end albums -->
+
+<div class="photos">
+  <h3>Photos:</h3>
+  <div class="row">
+  {% for photo in media.1 %}
+    <div class="three columns">
+      <a href="{% url 'photo' pk=photo.id %}">
+        {% thumbnail photo.photo "200" as im %}
+        <img src="{{ im.url }}">
+        {% endthumbnail %}
+      </a>
+      <p><a href="{% url 'photo' pk=photo.id %}">{{ photo.title }}</a></p>
+      <a href="{% url 'photo_edit' pk=photo.id %}"><button>Edit</button></a>
+    </div><!-- end column -->
+  {% if forloop.counter|divisibleby:4 %}
+  </div><!-- end row -->
+  <div class="row">
+  {% endif %}
+  {% endfor %}
+  </div><!-- end row -->
+</div><!-- end photos -->
 {% endblock %}

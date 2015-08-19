@@ -2,38 +2,32 @@
 {% load thumbnail %}
 {% load images_filters %}
 
-{% block nav %}
-<nav id="navbar-collapse" class="collapse u-pull-left">
-  <ul class="u-cf">
-    <li><a href="{% url 'profile:detail' %}">Profile</a></li>
-    <li><a href="{% url 'library' %}">Library</a></li>
-  </ul>
-</nav>
+{% block nav_li %}
+<li><a href="{% url 'profile:detail' %}">Profile</a></li>
+<li><a href="{% url 'library' %}">Library</a></li>
 {% endblock %}
 
 {% block content %}
-    {% if media.0|album_is_authorized:user %}
-    <div class="main">
-        <div class="photos">
-            <div class="row">
-            {% for photo in media.1|authorized_photos:user %}
-                <div class="three columns">
-                    <a href="{% url 'photo' pk=photo.id %}">
-                        {% thumbnail photo.photo "200" as im %}
-                        <img src="{{ im.url }}">
-                        {% endthumbnail %}
-                    </a>
-                    <p>{{ photo.title }}</p>
-                </div>
-            {% if forloop.counter|divisibleby:4 %}
-            </div>
-            <div class="row">
-            {% endif %}
-            {% endfor %}
-            </div>
-        </div>
-    </div>
-    {% else %}
+  {% if media.0|album_is_authorized:user %}
+    <div class="photos">
+      <div class="row">
+      {% for photo in media.1|authorized_photos:user %}
+        <div class="three columns">
+          <a href="{% url 'photo' pk=photo.id %}">
+            {% thumbnail photo.photo "200" as im %}
+            <img src="{{ im.url }}">
+            {% endthumbnail %}
+          </a>
+          <p>{{ photo.title }}</p>
+        </div><!-- end column -->
+      {% if forloop.counter|divisibleby:4 %}
+      </div><!-- end row -->
+      <div class="row">
+      {% endif %}
+      {% endfor %}
+      </div><!-- end row -->
+    </div><!-- end photos -->
+  {% else %}
     <p>Not found</p>
-    {% endif %}
+  {% endif %}
 {% endblock %}

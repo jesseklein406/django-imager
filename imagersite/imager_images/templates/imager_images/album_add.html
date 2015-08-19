@@ -1,38 +1,35 @@
 {% extends "base.html" %}
 
-{% block nav %}
-<nav id="navbar-collapse" class="collapse u-pull-left">
-  <ul class="u-cf">
-    <li><a href="{% url 'profile:detail' %}">Profile</a></li>
-    <li><a href="{% url 'library' %}">Library</a></li>
-  </ul>
-</nav>
+{% block nav_li %}
+<li><a href="{% url 'profile:detail' %}">Profile</a></li>
+<li><a href="{% url 'library' %}">Library</a></li>
 {% endblock %}
 
 {% block content %}
-    <div class="main">
-        <form action="{% url 'album_add' %}" method="post">{% csrf_token %}
-            <label>Title: <input type="text" name="title"></label>
-            <label>Description: <input type="text" name="description"></label>
-            <label>Photos: <select name="photos" size="6" multiple="multiple">
-                {% for photo in user.photos.all %}
-                <option value="{{ photo.id }}">{{ photo.title }}</option>
-                {% endfor %}
-                </select>
-            </label>
-            <label>Published: <select name="published">
-                <option value="private">Private</option>
-                <option value="shared">Shared</option>
-                <option value="public">Public</option>
-                </select>
-            </label>
-            <label>Cover: <select name="cover">
-                {% for photo in user.photos.all %}
-                <option value="{{ photo.id }}">{{ photo.title }}</option>
-                {% endfor %}
-                </select>
-            </label>
-            <input type="submit" name="albumadd" value="Submit">
-        </form>
-    </div>
+  <form action="{% url 'album_add' %}" method="post">{% csrf_token %}
+    <label>Title: <input type="text" name="title"></label>
+    <label>Description: <input type="text" name="description"></label>
+    <label>Photos:
+      <select name="photos" size="6" multiple="multiple">
+        {% for photo in user.photos.all %}
+        <option value="{{ photo.id }}">{{ photo.title }}</option>
+        {% endfor %}
+      </select>
+    </label>
+    <label>Published:
+      <select name="published">
+        <option value="private">Private</option>
+        <option value="shared">Shared</option>
+        <option value="public">Public</option>
+      </select>
+    </label>
+    <label>Cover:
+      <select name="cover">
+        {% for photo in user.photos.all %}
+        <option value="{{ photo.id }}">{{ photo.title }}</option>
+        {% endfor %}
+      </select>
+    </label>
+    <input type="submit" name="albumadd" value="Submit">
+  </form>
 {% endblock %}

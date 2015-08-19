@@ -1,30 +1,26 @@
 {% extends "base.html" %}
 
-{% block nav %}
-<nav id="navbar-collapse" class="collapse u-pull-left">
-  <ul class="u-cf">
-    <li><a href="{% url 'profile:edit' %}">Edit Profile</a></li>
-    <li><a href="{% url 'library' %}">Library</a></li>
-  </ul>
-</nav>
+{% block nav_li %}
+<li><a href="{% url 'profile:edit' %}">Edit Profile</a></li>
+<li><a href="{% url 'library' %}">Library</a></li>
 {% endblock %}
 
 {% block content %}
-    {% if user.is_authenticated %}
-    <div>
-        <h1>Your Profile</h1>
-        <ul>
-            <li>Username: {{ user.username }}</li>
-            <li>First name: {{ user.first_name }}</li>
-            <li>Last name: {{ user.last_name }}</li>
-            <li>Email: {{ user.email }}</li>
-            <li>Address: {{ user.profile.address }}</li>
-            <li>Website: {{ user.profile.web_url }}</li>
-            <li>Camera: {{ user.profile.camera }}</li>
-            <li>Type of Photography: {{ user.profile.type_photography }}</li>
-            <li>Number of photos: {{ user.photos.count }}</li>
-            <li>Number of albums: {{ user.albums.count }}</li>
-        </ul>
-    </div>
-    {% endif %}
+  {% if user.is_authenticated %}
+  <div>
+    <h1>Your Profile</h1>
+    <ul>
+      <li>Username: {{ user.username }}</li>
+      <li>First name: {{ user.first_name }}</li>
+      <li>Last name: {{ user.last_name }}</li>
+      <li>Email: {{ user.email }}</li>
+      <li>Address: {{ user.profile.address }}</li>
+      <li>Website: {{ user.profile.web_url }}</li>
+      <li>Camera: {{ user.profile.camera }}</li>
+      <li>Type of Photography: {{ user.profile.type_photography }}</li>
+      <li>Number of photos: {{ user.photos.count }}</li>
+      <li>Number of albums: {{ user.albums.count }}</li>
+    </ul>
+  </div>
+  {% endif %}
 {% endblock %}
