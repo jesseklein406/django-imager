@@ -14,7 +14,7 @@
 
 {% block content %}
   {% if photo|photo_is_authorized:user %}
-  <div id="photo-container" class="u-full-width">
+  <div id="photo-container" class="">
     <img src="{{ photo.photo.url }}" id="image">
   </div>
     <h3>{{ photo.title }}</h3>
