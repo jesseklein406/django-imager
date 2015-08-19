@@ -9,7 +9,8 @@ from .views import (
     AlbumView,
     AlbumAddView,
     AlbumUpdateView,
-    PhotoUpdateView
+    PhotoUpdateView,
+    FaceEditView
 )
 
 
@@ -34,5 +35,10 @@ urlpatterns = patterns(
         r'^photos/(?P<pk>\d+)/detect/$',
         PhotoView.as_view(detect=True),
         name='detect_faces'
+    ),
+    url(
+        r'^photos/(?P<pk>\d+)/face/edit/$',
+        FaceEditView.as_view(),
+        name='edit_face'
     ),
 )

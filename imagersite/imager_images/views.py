@@ -5,7 +5,9 @@ import os
 from django.core.urlresolvers import reverse
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
-from django.views.generic import ListView, CreateView, DetailView, UpdateView
+from django.views.generic import (ListView, CreateView, DetailView,
+                                  UpdateView, TemplateView)
+from django.http import HttpResponse
 from braces.views import LoginRequiredMixin
 
 from .models import Photo, Album, Face
@@ -135,3 +137,15 @@ class PhotoUpdateView(LoginRequiredMixin, UpdateView):
         )
         return obj
 
+
+class FaceEditView(TemplateView):
+    model = Face
+
+    def post(self, request, *args, **kwargs):
+        try:
+            face = Face.objects.get(id=request.POST['id'])
+            face.name = request.POST['name']
+            face.save()
+        except (TypeError, Photo.DoesNotExist, Face.DoesNotExist):
+            pass
+        return HttpResponse()
