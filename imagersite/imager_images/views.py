@@ -114,8 +114,8 @@ def photo_create(request):
 #     else:
 #         return render(request, 'imager_images/photo_edit.html', {'photo': photo})
 
-class PhotoUpdateView(UpdateView):
+class PhotoUpdateView(LoginRequiredMixin, UpdateView):
     template_name_suffix = '_edit'
     model = Photo
     fields = ['title', 'description', 'published']
-    success_url = 'images/library'
+    success_url = '/images/library'

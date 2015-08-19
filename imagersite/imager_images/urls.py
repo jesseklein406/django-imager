@@ -1,9 +1,8 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
 from __future__ import unicode_literals
+
 from django.conf.urls import patterns, url
-from imager_images.views import (
+
+from .views import (
     LibraryView,
     PhotoView,
     AlbumView,
@@ -11,7 +10,6 @@ from imager_images.views import (
     album_update,
     photo_create,
     PhotoUpdateView
-    # photo_update
 )
 
 
@@ -23,6 +21,9 @@ urlpatterns = patterns(
     url(r'^album/add/$', album_create, name='album_add'),
     url(r'^album/edit/(?P<pk>\d+)/$', album_update, name='album_edit'),
     url(r'^photos/add/$', photo_create, name='photo_add'),
-    url(r'^photos/edit/(?P<pk>\d+)/$', PhotoUpdateView.as_view(), name='photo_edit'),
-    # url(r'^photos/edit/(?P<pk>\d+)/$', photo_update, name='photo_edit'),
+    url(
+        r'^photos/edit/(?P<pk>\d+)/$',
+        PhotoUpdateView.as_view(),
+        name='photo_edit'
+    ),
 )
