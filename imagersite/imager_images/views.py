@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import get_object_or_404, render
 from django.views.generic import ListView, DetailView, UpdateView
 from braces.views import LoginRequiredMixin
@@ -82,9 +82,15 @@ def album_update(request, pk):
 
 class AlbumUpdateView(LoginRequiredMixin, UpdateView):
     template_name_suffix = '_edit'
-    model = Photo
+    model = Album
     fields = ['title', 'description', 'published', 'cover', 'photos']
-    success_url = '/images/library'
+    success_url = '/images/library/'
+
+    def get_form(self):
+        form = super(AlbumUpdateView, self).get_form()
+        form.fields['photos'].queryset = self.request.user.photos.all()
+        form.fields['cover'].queryset = form.instance.photos
+        return form
 
 
 @login_required

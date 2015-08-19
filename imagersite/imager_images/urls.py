@@ -8,6 +8,7 @@ from .views import (
     AlbumView,
     album_create,
     album_update,
+    AlbumUpdateView,
     photo_create,
     PhotoUpdateView
 )
@@ -19,7 +20,11 @@ urlpatterns = patterns(
     url(r'^album/(?P<pk>\d+)/$', AlbumView.as_view(), name='album'),
     url(r'^photos/(?P<pk>\d+)/$', PhotoView.as_view(), name='photo'),
     url(r'^album/add/$', album_create, name='album_add'),
-    url(r'^album/(?P<pk>\d+)/edit/$', album_update, name='album_edit'),
+    url(
+        r'^album/(?P<pk>\d+)/edit/$',
+        AlbumUpdateView.as_view(),
+        name='album_edit'
+    ),
     url(r'^photos/add/$', photo_create, name='photo_add'),
     url(
         r'^photos/(?P<pk>\d+)/edit/$',
