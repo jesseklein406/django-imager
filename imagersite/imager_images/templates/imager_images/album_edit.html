@@ -9,29 +9,36 @@
 {% block content %}
   {% if album|album_is_editable:user %}
     <form action="{% url 'album_edit' pk=album.id %}" method="post">{% csrf_token %}
-      <label>Title: <input type="text" name="title"></label>
-      <label>Description: <input type="text" name="description"></label>
-      <label>Photos: <select name="photos" size="6" multiple="multiple">
-        {% for photo in user.photos.all %}
-        <option value="{{ photo.id }}">{{ photo.title }}</option>
-        {% endfor %}
-        </select>
-      </label>
-      <label>Published: <select name="published">
-        <option value="private">Private</option>
-        <option value="shared">Shared</option>
-        <option value="public">Public</option>
-        </select>
-      </label>
-      <label>Cover: <select name="cover">
-        {% for photo in user.photos.all %}
-        <option value="{{ photo.id }}">{{ photo.title }}</option>
-        {% endfor %}
-        </select>
-      </label>
-      <input type="submit" name="albumedit" value="Submit">
+
+      <div class="row">
+        <div class="nine columns">
+          <label for="id_title">{{ form.title.label }}</label>
+          {{ form.title|add_class:'u-full-width' }}
+        </div><!-- end column -->
+        
+        <div class="three columns">
+          <label for="id_published">Visibility</label>
+          {{ form.published }}
+        </div><!-- end column -->
+      </div><!-- end row -->
+    
+      <label for="id_description">{{ form.description.label }}</label>
+      {{ form.description|add_class:'u-full-width' }}
+  
+      <label for="id_photos">{{ form.photos.label }}</label>
+      {{ form.photos|add_class:'tall_select_box u-full-width' }}
+      
+      <div class="row">
+        <div class="six columns">
+          <label for="id_cover">{{ form.cover.label }}</label>
+            {{ form.cover }}
+        </div><!-- end column -->
+      </div><!-- end row -->
+      
+      <input type="submit" class="button-primary" name="albumadd" value="Update">
     </form>
   {% else %}
     <p>Not found</p>
   {% endif %}
+
 {% endblock %}

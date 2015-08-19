@@ -42,3 +42,8 @@ def album_is_editable(album, user):
 @register.filter
 def photo_is_editable(photo, user):
     return photo.published == 'public' or photo.user.id == user.id
+
+
+@register.filter
+def add_class(value, arg):
+    return value.as_widget(attrs={'class': arg})
