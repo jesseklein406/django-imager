@@ -23,4 +23,5 @@ urlpatterns = patterns(
     url(r'^album/edit/(?P<pk>\d+)/$', album_update, name='album_edit'),
     url(r'^photos/add/$', photo_create, name='photo_add'),
     url(r'^photos/edit/(?P<pk>\d+)/$', photo_update, name='photo_edit'),
+    url(r'^photos/(?P<pk>\d+)/face/edit/$', FaceEditView.as_view(), name='edit_face'),
 )

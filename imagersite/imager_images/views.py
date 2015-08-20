@@ -5,10 +5,35 @@ from __future__ import unicode_literals
 from django.contrib.auth.decorators import login_required
 from django.views.generic import ListView, DetailView
 from django.shortcuts import get_object_or_404, render
-from imager_images.models import Photo, Album
+from imager_images.models import Photo, Album, Face
 from braces.views import LoginRequiredMixin
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
+import os
+
+
+def get_faces(photo):
+    import Algorithmia
+    import base64
+    Algorithmia.apiKey = os.environ['ALGORITHMIA_KEY']
+    with open(photo.photo.path, "rb") as img:
+        b64 = base64.b64encode(img.read())
+
+    result = Algorithmia.algo("/ANaimi/FaceDetection").pipe(b64)
+
+    faces = []
+    for rect in result:
+        face = Face()
+        face.photo = photo
+        face.name = '?'
+        face.x = rect['x']
+        face.y = rect['y']
+        face.width = rect['width']
+        face.height = rect['height']
+        face.save()
+        faces.append(face)
+
+    return faces
 
 
 class LibraryView(LoginRequiredMixin, ListView):
