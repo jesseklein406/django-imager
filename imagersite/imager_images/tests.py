@@ -134,17 +134,8 @@ class AlbumTestCase(TestCase):
 @override_settings(DEBUG=True)
 class LiveServerTest(StaticLiveServerTestCase):
 
-    @classmethod
-    def setUpClass(cls):
-        super(LiveServerTest, cls).setUpClass()
-        cls.browser = Browser()
-
-    @classmethod
-    def tearDownClass(cls):
-        cls.browser.quit()
-        super(LiveServerTest, cls).tearDownClass()
-
     def setUp(self):
+        self.browser = Browser()
         self.user1 = UserFactory()
         self.user1.set_password('secret')
         self.user1.save()
@@ -153,9 +144,11 @@ class LiveServerTest(StaticLiveServerTestCase):
             pic = PhotoFactory(user=self.user1)
             self.album1.photos.add(pic)
             pic.save()
-        # self.album1.cover = pic
         self.album1.save()
         pic.save()
+
+    def tearDown(self):
+        self.browser.quit()
 
     def login_helper(self, username, password):
         self.browser.visit('%s%s' % (self.live_server_url, '/accounts/login/'))
