@@ -77,3 +77,6 @@ class Face(models.Model):
     width = models.IntegerField()
     height = models.IntegerField()
     name = models.CharField(max_length=256, blank=True)
+
+    def __str__(self):
+        return 'Face: ' + self.photo.title + ' : ' + self.name
