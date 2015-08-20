@@ -12,8 +12,8 @@
 {% block content %}
     <div class="main">
         <form action="{% url 'photo_add' %}" method="post" enctype="multipart/form-data">{% csrf_token %}
-            <label>Title: <input type="text" name="title"></label>
-            <label>Description: <input type="text" name="description"></label>
+            <label>Title: <input type="text" name="title" id="title"></label>
+            <label>Description: <input type="text" name="description" id="description"></label>
             <label>Photo: <input type="file" name="photo"></label>
             <label>Published: <select name="published">
                 <option value="private">Private</option>
@@ -21,7 +21,7 @@
                 <option value="public">Public</option>
                 </select>
             </label>
-            <input type="submit" name="photoadd" value="Submit">
+            <input type="submit" name="photoadd" value="Submit" id="submit">
         </form>
     </div>
 {% endblock %}

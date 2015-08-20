@@ -10,7 +10,6 @@ from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from splinter import Browser
 from django.test.utils import override_settings
 from .models import Album, Photo
-from time import sleep
 
 fake = Faker()
 
@@ -144,7 +143,6 @@ class LiveServerTest(StaticLiveServerTestCase):
     def tearDownClass(cls):
         cls.browser.quit()
         super(LiveServerTest, cls).tearDownClass()
-        sleep(3)
 
     def setUp(self):
         self.user1 = UserFactory()
@@ -170,5 +168,17 @@ class LiveServerTest(StaticLiveServerTestCase):
         self.login_helper(self.user1.username, 'secret')
         self.browser.visit('%s%s' % (self.live_server_url, '/images/library/'))
         images = self.browser.find_by_tag('img')
-        # import pdb; pdb.set_trace()
         self.assertEqual(len(images), 11)
+
+    def test_edit(self):
+        self.login_helper(self.user1.username, 'secret')
+        self.browser.visit('%s%s' % (self.live_server_url, '/images/library/'))
+        self.browser.find_by_tag('button')[8].click()
+        self.browser.execute_script(
+            'document.getElementById("title").value="Hijacked"'
+        )
+        self.browser.execute_script(
+            'document.getElementById("description").value="hijacked"'
+        )
+        self.browser.find_by_id('submit').click()
+        self.assertTrue(self.browser.is_text_present('Hijacked'))

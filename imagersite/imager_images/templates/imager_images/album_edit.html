@@ -14,8 +14,8 @@
     {% if album|album_is_editable:user %}
     <div class="main">
         <form action="{% url 'album_edit' pk=album.id %}" method="post">{% csrf_token %}
-            <label>Title: <input type="text" name="title"></label>
-            <label>Description: <input type="text" name="description"></label>
+            <label>Title: <input type="text" name="title" id="title"></label>
+            <label>Description: <input type="text" name="description" id="description"></label>
             <label>Photos: <select name="photos" size="6" multiple="multiple">
                 {% for photo in user.photos.all %}
                 <option value="{{ photo.id }}">{{ photo.title }}</option>
@@ -34,7 +34,7 @@
                 {% endfor %}
                 </select>
             </label>
-            <input type="submit" name="albumedit" value="Submit">
+            <input type="submit" name="albumedit" value="Submit" id="submit">
         </form>
     </div>
     {% else %}
