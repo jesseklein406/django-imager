@@ -60,7 +60,7 @@ var FaceTagger =
 
     changeName: function(e)
     {
-        var face = $(e.toElement).parent();
+        var face = $(e.target).parent();
         var name = face.find(".name").text();
 
         swal({
