@@ -7,6 +7,7 @@ from imager_images.views import (
     LibraryView,
     PhotoView,
     AlbumView,
+    FaceEditView,
     album_create,
     album_update,
     photo_create,
