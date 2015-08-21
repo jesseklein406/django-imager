@@ -1,1 +1,1 @@
-# django-imager
+A photo-based social networking app
