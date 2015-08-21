@@ -20,7 +20,9 @@
 {% block content %}
     {% if photo|photo_is_authorized:user %}
     <div class="main">
-        <img src="{{ photo.photo.url }}">
+        <div id="photo-container">
+          <img src="{{ photo.photo.url }}">
+        </div>
         <h3>{{ photo.title }}</h3>
         <h4>{{ photo.user }}</h4>
         <p>{{ photo.description }}</p>
