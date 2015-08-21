@@ -3,11 +3,11 @@
 
 from __future__ import unicode_literals
 from django.contrib.auth.decorators import login_required
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, TemplateView
 from django.shortcuts import get_object_or_404, render
 from imager_images.models import Photo, Album, Face
 from braces.views import LoginRequiredMixin
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
 import os
 
@@ -137,3 +137,16 @@ def photo_update(request, pk):
 
     else:
         return render(request, 'imager_images/photo_edit.html', {'photo': photo})
+
+
+class FaceEditView(LoginRequiredMixin, TemplateView):
+    model = Face
+
+    def post(self, request, *args, **kwargs):
+        try:
+            face = Face.objects.get(id=request.POST['id'])
+            face.name = request.POST['name']
+            face.save()
+        except (TypeError, Photo.DoesNotExist, Face.DoesNotExist):
+            pass
+        return HttpResponse()
